@@ -185,12 +185,17 @@ td.n,th.n{text-align:right}
         </div>
         <div class="ctl">
           <label for="n">도크(차량) 수 <output id="nO"></output></label>
-          <input id="n" type="range" min="20" max="40" step="2" value="30">
+          <input id="n" type="range" min="20" max="80" step="2" value="30">
         </div>
         <div class="ctl">
           <label for="r">순환도로 폭 <output id="rO"></output></label>
           <input id="r" type="range" min="5" max="8" step="0.5" value="6.5">
           <small>일방통행, 소방차 진입로 겸용</small>
+        </div>
+        <div class="ctl">
+          <label for="yr">공원 크기 <output id="yrO"></output></label>
+          <input id="yr" type="range" min="0.05" max="0.45" step="0.05" value="0.3">
+          <small>양옆 도크를 윗줄로 옮길수록 마당이 얕아지고 부지는 가로로 길어짐</small>
         </div>
         <label class="toggle"><input id="anim" type="checkbox" checked> 차량 흐름 재생</label>
       </div>
@@ -234,7 +239,7 @@ const VEH={
   pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:2.8,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
 };
 const ZC={MAKE:'#FF2D3D',QUIET:'#8A1FFF',EXPLORE:'#00B84A'}; // AFTERSPACE/art · story · nature
-const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1};
+const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1,yr:.3};
 let P=1.4; // 부두 폭, geo()가 옆 차 간격에서 계산
 let SCN={},raf=0,FULL=null,CUR=null,WK={a:4,b:null},wraf=0;
 const STEP=.55,CAD=2; // ponytail: 초등 4학년(10세) 보폭 0.55 m · 초당 2걸음 추정치, 실측값 생기면 교체
@@ -258,11 +263,11 @@ function slots(c,bw,sh){
 function geo(S){
   const v=VEH[S.veh],{n,R,m,share}=S,bw=v.bw,d=v.bd+APR,Gw=2*v.turn+R;
   P=S.gap-(bw-v.W);
-  const s=Math.max(2,Math.round(n/m*.3)),teeth=[];let x=B+R;
+  const s=Math.max(1,Math.min(Math.floor((Math.floor(n/m)-2)/2),Math.round(n/m*S.yr))),teeth=[];let x=B+R; // s 상한: 윗줄 최소 2대
   for(let j=0;j<m;j++){const c=Math.floor(n/m)+(j<n%m?1:0),t=c-2*s,Wy=rowLen(t,bw,share);teeth.push({x0:x,t,Wy});x+=2*d+Wy+(j<m-1?Gw:0)}
   const W=x+R+B,Hs=rowLen(s,bw,share),yi0=B+R+d,yb=yi0+Hs;
   // 하단 광장: U턴이 있으면 보행로(ys)와 코어 줄을 U턴 아래로 내려 가로 어디든 놓일 수 있게
-  const ys=m>1?yb+v.turn+R/2+1.2:yb+1,cy=ys+1.2,ch=8,cw=14,PB=cy+ch+2.2;
+  const ys=m>1?yb+v.turn+R/2+1.2:yb+1,cy=ys+1.2,ch=8,cw=Math.max(5,Math.min(14,(W-2*B-2*R-14)/2)),PB=cy+ch+2.2;
   const rows=[],docks=[];let no=0;
   teeth.forEach((q,j)=>{const yx=q.x0+d;rows.push({x:q.x0,y:yb,a:-90,c:s,j,f:0},{x:yx,y:B+R,a:0,c:q.t,j,f:1},{x:yx+q.Wy+d,y:yi0,a:90,c:s,j,f:2})});
   rows.forEach(o=>{o.no0=no;slots(o.c,bw,share).forEach(q=>{const px=q.pier+P/2;
@@ -273,6 +278,7 @@ function geo(S){
   const at=gx=>({x:gx+3,y:cy,w:cw,h:ch,gx,door:[gx+4.5,cy]});let best=null;
   for(let gx=B+R+4+cw;gx<=W-B-R-4-cw;gx+=.5){G.core=at(gx);const mx=coreDist(G).max;
     if(!best||mx<best[0]-1e-6||(Math.abs(mx-best[0])<1e-6&&Math.abs(gx-W/2)<Math.abs(best[1]-W/2)))best=[mx,gx]}
+  if(!best)best=[0,W/2-1.5]; // 광장이 좁아 후보가 없으면 가운데
   G.core=at(best[1]);G.lounge={door:[best[1]-4.5,cy]};
   return G;
 }
@@ -407,7 +413,7 @@ function render(){
   // 숫자 · 점검 · 비교표
   const cd=coreDist(G),ld=coreDist(G,'lounge');
   $('kpis').innerHTML=[[S.n,'대','Docks'],[fmt(G.yard/m),'㎡',m>1?`Yard × ${m}`:'Yard'],[fmt(cd.max),'m','Max to core'],[fmt(G.area),'㎡','Site']].map(([n,u,l])=>`<div class="kpi"><b>${n}<small>${u}</small></b><span class="lbl">${l}</span></div>`).join('');
-  $('nO').textContent=`${S.n}대`;$('gpO').textContent=`${S.gap.toFixed(1)} m`;$('rO').textContent=`${R.toFixed(1)} m`;
+  $('nO').textContent=`${S.n}대`;$('gpO').textContent=`${S.gap.toFixed(1)} m`;$('yrO').textContent=`${fmt(G.yard/m)} ㎡${m>1?' × '+m:''}`;$('rO').textContent=`${R.toFixed(1)} m`;
   $('stats').innerHTML=[
     ['부지 (가로 × 세로)',`${W.toFixed(1)} × ${PB.toFixed(1)} m`],
     ['부지 면적',`${fmt(G.area)} ㎡ (${fmt(G.area/3.3058)}평)`],
@@ -565,6 +571,7 @@ document.querySelectorAll('input[name=sh]').forEach(el=>el.onchange=()=>{S.share
 $('n').oninput=e=>{S.n=+e.target.value;render()};
 $('r').oninput=e=>{S.R=+e.target.value;render()};
 $('gp').oninput=e=>{S.gap=+e.target.value;render()};
+$('yr').oninput=e=>{S.yr=+e.target.value;render()};
 $('anim').onchange=()=>{if(!raf)applyAnim()};
 $('play').onclick=play;
 const pick=tr=>{S.m=+tr.dataset.m;S.share=tr.dataset.s=='1';$('m'+S.m).checked=true;$('sh'+(+S.share)).checked=true;render()};
