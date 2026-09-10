@@ -41,7 +41,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,tr:focus-visible{o
 .ctl output{font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
 .ctl small{color:var(--faint);font-size:12px;line-height:1.5}
 input[type=range]{width:100%;accent-color:var(--navy)}
-select{font:400 14px "42dot Sans",sans-serif;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:var(--surface);color:var(--ink);box-shadow:var(--e1)}
+select{width:100%;font:400 14px "42dot Sans",sans-serif;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:var(--surface);color:var(--ink);box-shadow:var(--e1)}
 .seg{display:flex;background:var(--muted-s);border-radius:999px;padding:4px;gap:4px}
 .seg label{flex:1;display:grid;place-items:center;min-height:36px;font-size:14px;color:var(--soft);border-radius:999px;cursor:pointer}
 .seg input{position:absolute;opacity:0;pointer-events:none}
@@ -448,7 +448,7 @@ function play(){
     [8,'전진으로 전환. D가 앞, A가 뒤에서 같은 속도로 간격 유지'],
     [9.2,'구간 해제. B가 출발해 나가는 A 뒤를 따라 들어옴'],
     [11.2,'B가 빈 도크에 전진 도킹'],
-    [13.4,'바퀴 고정, 충전 연결, 도킹 확인 후 가림판 열림. 탑승 시작'];
+    [13.4,'바퀴 고정, 충전 연결, 도킹 확인 후 가림판 열림. 탑승 시작']];
   let t0=performance.now(),ci=-1;$('play').textContent='정지';
   const tick=now=>{
     const t=(now-t0)/1000;
