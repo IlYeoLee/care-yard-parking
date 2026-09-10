@@ -535,7 +535,7 @@ function play(){
 // ── 도보 시뮬: 도크 · 서비스 코어 · 라운지 중 두 곳 ──
 function walk(){
   cancelAnimationFrame(wraf);
-  const G=CUR,ep=x=>typeof x=='string'?x:G.docks.find(d=>d.no==x),pt=x=>typeof x=='string'?place(G,x).door:x.door;
+  const G=CUR,ep=x=>typeof x=='string'?x:G.docks.find(d=>d.no==x),pt=x=>typeof x=='string'?place(G,x):x.door;
   const lbl=x=>x=='core'?'서비스 코어':x=='lounge'?'라운지':`${x.no}번`,A=ep(WK.a),T=WK.b==null?null:ep(WK.b);
   const pin=([x,y],t)=>`<g transform="translate(${x} ${y})"><rect x="-.6" y="-.6" width="1.2" height="1.2" fill="#FF1F78"/><text class="pin" y="-1.1">${t}</text></g>`;
   const dl=r=>r.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
