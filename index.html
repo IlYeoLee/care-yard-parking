@@ -33,7 +33,8 @@ button{font:800 14px "42dot Sans",sans-serif;letter-spacing:-.02em;background:va
 button:focus-visible,input:focus-visible,select:focus-visible,tr:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .sheet{background:#F7F7F9;box-shadow:var(--e1);overflow-x:auto}
 .sheet svg{display:block;width:100%;min-width:760px;height:auto}
-.panel{display:grid;gap:16px}
+.panel{display:grid;gap:16px;position:sticky;top:16px}
+@media (max-width:1020px){.panel{position:static}}
 .box{background:var(--surface);box-shadow:var(--e1);padding:16px;display:grid;gap:12px;align-content:start}
 .box h2{margin:0;font:800 16px/1.4 "42dot Sans",sans-serif;letter-spacing:-.02em}
 .ctl{display:grid;gap:6px}
