@@ -193,7 +193,12 @@ td.n,th.n{text-align:right}
           <small>일방통행, 소방차 진입로 겸용</small>
         </div>
         <div class="ctl">
-          <label for="yr">공원 모양과 크기 <output id="yrO"></output></label>
+          <label for="ex">공원 넓히기 <output id="exO"></output></label>
+          <input id="ex" type="range" min="0" max="60" step="2" value="0">
+          <small>마당 가로·세로를 이만큼 늘림. 도크는 각 변 가운데로 모이고 남는 변은 식재</small>
+        </div>
+        <div class="ctl">
+          <label for="yr">마당 비율 <output id="yrO"></output></label>
           <input id="yr" type="range" min="0.05" max="0.45" step="0.05" value="0.3">
           <small>가운데 쯤이 마당이 가장 넓음. 왼쪽은 얕고 넓게, 오른쪽은 좁고 깊게 줄어듦</small>
         </div>
@@ -239,7 +244,7 @@ const VEH={
   pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:2.8,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
 };
 const ZC={MAKE:'#FF2D3D',QUIET:'#8A1FFF',EXPLORE:'#00B84A'}; // AFTERSPACE/art · story · nature
-const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1,yr:.3};
+const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1,yr:.3,ex:0};
 let P=1.4; // 부두 폭, geo()가 옆 차 간격에서 계산
 let SCN={},raf=0,FULL=null,CUR=null,WK={a:4,b:null},wraf=0;
 const STEP=.55,CAD=2; // ponytail: 초등 4학년(10세) 보폭 0.55 m · 초당 2걸음 추정치, 실측값 생기면 교체
@@ -262,14 +267,14 @@ function slots(c,bw,sh){
 // 배치 계산 (DOM 없음): 포켓 · 도크 줄 · 도크별 보행 좌표 · 서비스 코어
 function geo(S){
   const v=VEH[S.veh],{n,R,m,share}=S,bw=v.bw,d=v.bd+APR,Gw=2*v.turn+R;
-  P=S.gap-(bw-v.W);
+  P=S.gap-(bw-v.W);const E=S.ex; // 공원 넓히기: 마당 가로·세로에 더하는 길이, 도크는 각 변 가운데로 모임
   const s=Math.max(1,Math.min(Math.floor((Math.floor(n/m)-2)/2),Math.round(n/m*S.yr))),teeth=[];let x=B+R; // s 상한: 윗줄 최소 2대
-  for(let j=0;j<m;j++){const c=Math.floor(n/m)+(j<n%m?1:0),t=c-2*s,Wy=rowLen(t,bw,share);teeth.push({x0:x,t,Wy});x+=2*d+Wy+(j<m-1?Gw:0)}
-  const W=x+R+B,Hs=rowLen(s,bw,share),yi0=B+R+d,yb=yi0+Hs;
+  for(let j=0;j<m;j++){const c=Math.floor(n/m)+(j<n%m?1:0),t=c-2*s,Wy=rowLen(t,bw,share)+E;teeth.push({x0:x,t,Wy});x+=2*d+Wy+(j<m-1?Gw:0)}
+  const W=x+R+B,Hs=rowLen(s,bw,share)+E,yi0=B+R+d,yb=yi0+Hs;
   // 하단 광장: U턴이 있으면 보행로(ys)와 코어 줄을 U턴 아래로 내려 가로 어디든 놓일 수 있게
   const ys=m>1?yb+v.turn+R/2+1.2:yb+1,cy=ys+1.2,ch=8,cw=Math.max(5,Math.min(14,(W-2*B-2*R-14)/2)),PB=cy+ch+2.2;
   const rows=[],docks=[];let no=0;
-  teeth.forEach((q,j)=>{const yx=q.x0+d;rows.push({x:q.x0,y:yb,a:-90,c:s,j,f:0},{x:yx,y:B+R,a:0,c:q.t,j,f:1},{x:yx+q.Wy+d,y:yi0,a:90,c:s,j,f:2})});
+  teeth.forEach((q,j)=>{const yx=q.x0+d;rows.push({x:q.x0,y:yb-E/2,a:-90,c:s,j,f:0},{x:yx+E/2,y:B+R,a:0,c:q.t,j,f:1},{x:yx+q.Wy+d,y:yi0+E/2,a:90,c:s,j,f:2})});
   rows.forEach(o=>{o.no0=no;slots(o.c,bw,share).forEach(q=>{const px=q.pier+P/2;
     docks.push({no:++no,j:o.j,door:rot(o,px,v.bd*.55),apron:rot(o,px,v.bd+APR/2),edge:rot(o,px,d+.6)})})});
   const G={v,n,R,m,share,bw,d,Gw,HZ:PB-yb,s,teeth,W,Hs,yi0,yb,PB,sy:PB+WALK,sb:PB+WALK+ST,rows,docks,ys,yw:ys,
@@ -367,6 +372,7 @@ function render(){
       g+=tag(yx+1.2,yi0+2.6,ZC.MAKE,'MAKE')+tag(yx+Wy/2-2.4,yi0+2.6,ZC.QUIET,'QUIET')+tag(yx+Wy-8.4,yi0+2.6,ZC.EXPLORE,'EXPLORE');
     }
   });
+  if(S.ex>0)teeth.forEach(q=>{const yx=q.x0+d;g+=`<rect class="plant" x="${q.x0}" y="${yi0}" width="${d}" height="${Hs}"/><rect class="plant" x="${yx}" y="${B+R}" width="${q.Wy}" height="${d}"/><rect class="plant" x="${yx+q.Wy}" y="${yi0}" width="${d}" height="${Hs}"/>`}); // 도크 없는 변은 식재
   G.rows.forEach(o=>{
     const last=o.j==m-1,col=ZC[Z?Z[o.j]:['MAKE','QUIET','EXPLORE'][o.f]];
     const id=last&&o.f==1?{i:Math.floor(o.c/2),k:'a'}:last&&o.f==2?{i:Math.min(1,o.c-1),k:'d'}:null;
@@ -413,7 +419,7 @@ function render(){
   // 숫자 · 점검 · 비교표
   const cd=coreDist(G),ld=coreDist(G,'lounge');
   $('kpis').innerHTML=[[S.n,'대','Docks'],[fmt(G.yard/m),'㎡',m>1?`Yard × ${m}`:'Yard'],[fmt(cd.max),'m','Max to core'],[fmt(G.area),'㎡','Site']].map(([n,u,l])=>`<div class="kpi"><b>${n}<small>${u}</small></b><span class="lbl">${l}</span></div>`).join('');
-  $('nO').textContent=`${S.n}대`;$('gpO').textContent=`${S.gap.toFixed(1)} m`;$('yrO').textContent=`${fmt(G.yard/m)} ㎡${m>1?' × '+m:''}`;$('rO').textContent=`${R.toFixed(1)} m`;
+  $('nO').textContent=`${S.n}대`;$('gpO').textContent=`${S.gap.toFixed(1)} m`;$('exO').textContent=`+${S.ex} m`;$('yrO').textContent=`${fmt(G.yard/m)} ㎡${m>1?' × '+m:''}`;$('rO').textContent=`${R.toFixed(1)} m`;
   $('stats').innerHTML=[
     ['부지 (가로 × 세로)',`${W.toFixed(1)} × ${PB.toFixed(1)} m`],
     ['부지 면적',`${fmt(G.area)} ㎡ (${fmt(G.area/3.3058)}평)`],
@@ -572,6 +578,7 @@ $('n').oninput=e=>{S.n=+e.target.value;render()};
 $('r').oninput=e=>{S.R=+e.target.value;render()};
 $('gp').oninput=e=>{S.gap=+e.target.value;render()};
 $('yr').oninput=e=>{S.yr=+e.target.value;render()};
+$('ex').oninput=e=>{S.ex=+e.target.value;render()};
 $('anim').onchange=()=>{if(!raf)applyAnim()};
 $('play').onclick=play;
 const pick=tr=>{S.m=+tr.dataset.m;S.share=tr.dataset.s=='1';$('m'+S.m).checked=true;$('sh'+(+S.share)).checked=true;render()};
