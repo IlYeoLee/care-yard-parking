@@ -1,0 +1,507 @@
+<title>Care Yard 배치도</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ECEEF3; --panel:#FFFFFF; --ink:#141925; --muted:#5A6376; --line:#D3D8E2; --soft:#F3F4F8;
+  --accent:#E6329A; --ok:#0E9F6E; --warn:#D97706; --stop:#E5484D;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F121A; --panel:#171B25; --ink:#E7EAF1; --muted:#99A2B4; --line:#2A303D; --soft:#1E2330;
+    --accent:#FF4DAE; --ok:#34D399; --warn:#FBBF24; --stop:#FF6B6F;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F121A; --panel:#171B25; --ink:#E7EAF1; --muted:#99A2B4; --line:#2A303D; --soft:#1E2330;
+  --accent:#FF4DAE; --ok:#34D399; --warn:#FBBF24; --stop:#FF6B6F;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans KR",system-ui,sans-serif;padding-inline:20px;padding-block:28px 48px}
+a{color:var(--accent)}
+.wrap{max-width:1360px;margin:0 auto;display:grid;gap:22px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+header{display:grid;gap:6px}
+.eyebrow{font:500 12px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;color:var(--muted)}
+h1{margin:0;font-size:clamp(26px,3.4vw,40px);font-weight:900;letter-spacing:-.02em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{margin:0;max-width:72ch;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+@media (max-width:1020px){.grid{grid-template-columns:1fr}}
+.main{display:grid;gap:12px;min-width:0}
+.scenebar{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+.scenebar p{margin:0;font-size:14px;line-height:1.45;min-height:2.9em;display:flex;align-items:center}
+button{font:700 14px "Noto Sans KR",sans-serif;background:var(--accent);color:#fff;border:0;border-radius:4px;padding:10px 14px;cursor:pointer;white-space:nowrap}
+button:focus-visible,input:focus-visible,select:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sheet{background:#F6F6F2;border:1px solid var(--line);border-radius:4px;overflow-x:auto}
+.sheet svg{display:block;width:100%;min-width:760px;height:auto}
+.panel{display:grid;gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px 18px;display:grid;gap:12px;align-content:start}
+.box h2{margin:0;font-size:13px;font-weight:700;letter-spacing:.02em}
+.ctl{display:grid;gap:4px}
+.ctl>label,.ctl>.lab{display:flex;justify-content:space-between;font-size:13px}
+.ctl output{font:600 13px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.ctl small{color:var(--muted);font-size:12px;line-height:1.4}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select{font:500 14px "Noto Sans KR",sans-serif;padding:7px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink)}
+.seg{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg label{flex:1;text-align:center;font-size:13px;padding:7px 4px;cursor:pointer;border-left:1px solid var(--line)}
+.seg label:first-of-type{border-left:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked+label{background:var(--ink);color:var(--panel);font-weight:700}
+.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:-2px}
+.toggle{display:flex;gap:8px;align-items:center;font-size:13px}
+.stats{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0;font-size:13px}
+.stats dt{color:var(--muted)}
+.stats dd{margin:0;text-align:right;font:500 13px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.checks{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:13px;line-height:1.45}
+.checks li{display:grid;grid-template-columns:auto 1fr;gap:8px}
+.pill{font:600 10px/1 "IBM Plex Mono",monospace;padding:4px 6px;border-radius:999px;color:#fff;align-self:start;margin-top:1px}
+.pill.ok{background:var(--ok)} .pill.warn{background:var(--warn)}
+.tbl{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:500;color:var(--muted);font-size:12px}
+td.n{font-family:"IBM Plex Mono",monospace;text-align:right}
+th.n{text-align:right}
+#cmp tbody tr{cursor:pointer}
+#cmp tbody tr:hover{background:var(--soft)}
+#cmp tr.cur{background:var(--soft);box-shadow:inset 3px 0 0 var(--accent)}
+#cmp tr.cur td:first-child{font-weight:700;color:var(--accent)}
+.cap{font-size:12.5px;color:var(--muted);padding:8px 10px;margin:0}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.how ol,.how ul{margin:0;padding-left:1.2em;display:grid;gap:8px;font-size:14px}
+.how p{margin:0;font-size:14px;max-width:62ch}
+.key{border-left:3px solid var(--accent)}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:12.5px;align-items:center}
+.sw{width:22px;height:10px;border-radius:2px}
+.src{font-size:12px;color:var(--muted);margin:0;line-height:1.7}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">AFTERSPACE · CARE YARD · 배치 스터디</div>
+    <h1>링을 닫지 말고, <em>ㄷ자로 연다</em></h1>
+    <p class="lede">차도가 마당을 다 감싸면 누군가는 차도를 건너야 합니다. 거리 쪽 한 변을 열면 그곳이 인계 게이트가 되고, 사람은 차도를 한 번도 건너지 않습니다. 마당을 몇 개로 쪼갤지, 부두를 두 대가 같이 쓸지에 따라 여섯 가지 안이 나옵니다. 아래 표에서 골라 보세요.</p>
+  </header>
+
+  <div class="grid">
+    <div class="main">
+      <div class="scenebar">
+        <button id="play" type="button">▶ 출차 장면 보기</button>
+        <p id="cap" aria-live="polite">A와 D가 빠져나가고, 뒤따라온 B가 빈자리에 들어가는 장면입니다. 두 대가 동시에 나갈 때, 들어오는 차와 나가는 차가 어떻게 안 부딪히는지 보여 줍니다.</p>
+      </div>
+      <div class="sheet"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Care Yard 평면 배치도"></svg></div>
+      <div class="tbl">
+        <table id="cmp"></table>
+        <p class="cap">현재 차종 · 도크 수 · 도로 폭 기준으로 여섯 안을 비교합니다. 행을 누르면 도면이 바뀝니다.</p>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="box">
+        <h2>설계 조건</h2>
+        <div class="ctl">
+          <label for="veh">기준 차량</label>
+          <select id="veh">
+            <option value="pv5">PV5 패신저 — 4.70 × 1.90 m</option>
+            <option value="pv7">PV7 콘셉트 — 5.27 × 2.07 m</option>
+          </select>
+        </div>
+        <div class="ctl">
+          <span class="lab">마당 나누기</span>
+          <div class="seg">
+            <input type="radio" name="m" id="m1" value="1" checked><label for="m1">한 마당</label>
+            <input type="radio" name="m" id="m2" value="2"><label for="m2">2 포켓</label>
+            <input type="radio" name="m" id="m3" value="3"><label for="m3">3 포켓</label>
+          </div>
+          <small>포켓 사이는 U턴 골목이 들어가고, 아이는 아래쪽 보행 띠로 오갑니다.</small>
+        </div>
+        <div class="ctl">
+          <span class="lab">승하차 부두</span>
+          <div class="seg">
+            <input type="radio" name="sh" id="sh0" value="0" checked><label for="sh0">1대 1부두</label>
+            <input type="radio" name="sh" id="sh1" value="1"><label for="sh1">2대 1부두</label>
+          </div>
+          <small>2대 1부두는 두 차가 부두 하나를 사이에 두고 마주 봅니다. 한 대는 왼쪽 문, 한 대는 오른쪽 문으로 내립니다.</small>
+        </div>
+        <div class="ctl">
+          <label for="n">도크(차량) 수 <output id="nO"></output></label>
+          <input id="n" type="range" min="20" max="40" step="2" value="30">
+        </div>
+        <div class="ctl">
+          <label for="r">순환도로 폭 <output id="rO"></output></label>
+          <input id="r" type="range" min="5" max="8" step="0.5" value="6.5">
+          <small>일방통행 · 소방차 통로 겸용</small>
+        </div>
+        <label class="toggle"><input id="anim" type="checkbox" checked> 차량 흐름 재생</label>
+      </div>
+
+      <div class="box">
+        <h2>이 안의 숫자</h2>
+        <dl class="stats" id="stats"></dl>
+        <ul class="checks" id="checks"></ul>
+      </div>
+
+      <div class="box">
+        <h2>도면 읽는 법</h2>
+        <div class="legend">
+          <span class="sw" style="background:#3B404B"></span><span>차도 — 흰 화살표 방향으로만 흐름</span>
+          <span class="sw" style="background:#E6E2D8"></span><span>부두 · 에이프런 — 아이가 걷는 바닥</span>
+          <span class="sw" style="background:repeating-linear-gradient(90deg,#E6329A 0 5px,transparent 5px 8px)"></span><span>물리적 가림판 — 차가 움직이면 닫힘</span>
+          <span class="sw" style="background:#141925;height:3px"></span><span>펜스 — 사람이 차도로 못 나가는 선</span>
+          <span class="sw" style="background:#E5484D;height:4px"></span><span>대기선 — 앞 차가 후진하는 동안 뒤 차가 서는 곳</span>
+          <span class="sw" style="background:repeating-linear-gradient(90deg,#2D5BFF 0 5px,transparent 5px 8px)"></span><span>사람 동선</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="how">
+    <div class="box">
+      <h2>차는 이렇게 움직입니다</h2>
+      <ol>
+        <li><b>우회전으로 진입.</b> 거리에서 왼쪽 입구로 들어옵니다. 반대 차선을 가로지르지 않습니다.</li>
+        <li><b>시계방향 일방통행.</b> 마주 오는 차가 없고, 도크는 늘 운전석 오른쪽에 있습니다.</li>
+        <li><b>전진 도킹.</b> 코가 마당 쪽. 바퀴 고정 → 충전 연결 → 도킹 확인.</li>
+        <li><b>옆문은 부두 쪽만.</b> 반대쪽 문은 잠깁니다. 아이는 부두를 따라 마당으로 걸어 나갑니다.</li>
+        <li><b>후진 출차 → 우회전 퇴장.</b> 가림판이 닫힌 뒤 후진해서 도로로 나오고, 같은 방향으로 계속 가서 오른쪽 출구로 나갑니다.</li>
+      </ol>
+    </div>
+    <div class="box key">
+      <h2>여러 대가 한꺼번에 나가면?</h2>
+      <ul>
+        <li><b>정면충돌이 날 자리가 없습니다.</b> 들어오는 차와 나가는 차가 같은 방향으로 한 줄로 흐릅니다.</li>
+        <li><b>위험한 순간은 딱 하나, 후진으로 도로에 나올 때.</b> 이때 관제가 그 도크 뒤쪽 도로 구간을 비워 두고, 뒤 차는 빨간 대기선에서 멈춥니다. 공항에서 비행기가 뒤로 밀려 나올 때(푸시백) 유도로를 비워 두는 것과 같은 방식입니다.</li>
+        <li><b>출구에 가까운 차부터.</b> 앞 차가 먼저 빠지면 뒤 차는 기다리지 않고 바로 후진할 수 있습니다. 한 변에서는 한 번에 한 대씩, 서로 다른 변은 동시에 움직여도 됩니다.</li>
+        <li><b>30대가 한꺼번에 빠지는 최악의 경우도 대략 5~10분</b>입니다(대당 후진 10~15초로 잡은 어림값). 실제로는 수업 시간표대로 나눠 나가서 몰리지 않습니다.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>기아 PBV 공개 제원</h2>
+      <div class="tbl" style="border:0">
+        <table>
+          <thead><tr><th>차종</th><th class="n">전장 × 전폭 × 전고</th><th class="n">휠베이스</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>PV5 패신저</td><td class="n">4,695 × 1,895 × 1,905</td><td class="n">2,995</td><td>5인승 · 회전반경 5.5 m</td></tr>
+            <tr><td>PV5 롱 / 하이루프</td><td class="n">4,890 × 1,895 × 2,200</td><td class="n">2,995</td><td>카고 계열</td></tr>
+            <tr><td>PV5 WAV</td><td class="n">PV5 차체 기반</td><td class="n">—</td><td>휠체어석 + 측면 경사로</td></tr>
+            <tr><td>PV7 콘셉트</td><td class="n">5,270 × 2,065 × 2,120</td><td class="n">3,390</td><td>양산형 9/14 IAA 공개</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>PV5 패신저는 <b>양쪽 슬라이딩 도어가 기본</b>입니다(개구 폭 775 mm, 발판 높이 399 mm). 그래서 두 대가 부두 하나를 같이 쓰는 배치가 가능합니다. PV7은 아직 콘셉트 수치만 공개됐고, 도어 구성도 양산형 공개 뒤에 다시 확인해야 합니다.</p>
+      <p class="src">단위 mm · 출처: <a href="https://www.kia.com/kr/pbv/vehicles/pv5-passenger/specification">기아 PV5 패신저 제원</a> · <a href="https://www.hyundaimotorgroup.com/ko/story/CONT0000000000184521">현대차그룹 PV5 시승기(회전반경)</a> · <a href="https://www.kia.com/uk/pbv/lineup/pv5-passenger/">Kia UK PV5 Passenger(양측 도어)</a> · <a href="https://en.wikipedia.org/wiki/Kia_PV5">Wikipedia PV5(롱·하이루프)</a> · <a href="https://www.kianewscenter.com/news/europe-news/introducing-kia-pv5-wav--a-new-era-of-wheelchair-accessible-electric-vehicles/s/1195653c-051b-4c8d-8430-cc67b56f78b5">Kia PV5 WAV</a> · <a href="https://electrek.co/2026/08/31/kia-confirms-pv7-debut-previews-larger-ev-van-video/">Electrek PV7</a></p>
+    </div>
+  </section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const B=3,APR=2,P=1.4,WALK=3,ST=8,RC=3,V=12;
+const VEH={
+  pv5:{name:'PV5 패신저',L:4.695,W:1.895,turn:5.5,bw:2.6,bd:5.5,both:true},
+  pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:2.8,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
+};
+const ZC={MAKE:'#E6329A',QUIET:'#2D5BFF',EXPLORE:'#FF7A1A'};
+const S={veh:'pv5',m:1,share:false,n:30,R:6.5};
+let SCN={},raf=0,FULL=null;
+
+const rot=(o,x,y)=>{const a=o.a*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return [o.x+x*c-y*s,o.y+x*s+y*c]};
+const rowLen=(c,bw,sh)=>sh?Math.floor(c/2)*(2*bw+P)+(c%2)*(P+bw):c*(P+bw);
+const fmt=x=>Math.round(x).toLocaleString();
+// 각 차의 칸·부두 로컬 x. 2대 1부두면 [칸][부두][칸] 쌍, 홀수 남으면 마지막은 1대 1부두
+function slots(c,bw,sh){
+  const out=[];
+  for(let i=0;i<c;i++){
+    if(sh&&!(c%2&&i==c-1)){const b=Math.floor(i/2)*(2*bw+P);out.push(i%2?{bay:b+bw+P,pier:b+bw,dp:false}:{bay:b,pier:b+bw,dp:true})}
+    else{const b=sh?Math.floor(c/2)*(2*bw+P):i*(P+bw);out.push({bay:b+P,pier:b,dp:true})}
+  }
+  return out;
+}
+
+function geo(S){
+  const v=VEH[S.veh],{n,R,m,share}=S,bw=v.bw,d=v.bd+APR,Gw=2*v.turn+R;
+  const HZ=m>1?Math.max(15,v.turn+R/2+6):15, s=Math.max(2,Math.round(n/m*.3));
+  const teeth=[];let x=B+R;
+  for(let j=0;j<m;j++){const c=Math.floor(n/m)+(j<n%m?1:0),t=c-2*s,Wy=rowLen(t,bw,share);teeth.push({x0:x,t,Wy});x+=2*d+Wy+(j<m-1?Gw:0)}
+  const W=x+R+B,Hs=rowLen(s,bw,share),yi0=B+R+d,yb=yi0+Hs,PB=yb+HZ;
+  return {v,n,R,m,share,bw,d,Gw,HZ,s,teeth,W,Hs,yi0,yb,PB,sy:PB+WALK,sb:PB+WALK+ST,
+    yard:teeth.reduce((a,q)=>a+q.Wy*Hs,0),area:W*PB,gap:share?[bw-v.W,bw-v.W+P]:[bw-v.W+P]};
+}
+
+const arw=(x,y,deg)=>`<path class="arw" d="M-.9 -.8 L.7 0 L-.9 .8" transform="translate(${x} ${y}) rotate(${deg})"/>`;
+const tree=(x,y,r)=>`<circle class="tree" cx="${x}" cy="${y}" r="${r}"/>`;
+const carTop=(cx,L,W)=>`<rect class="car" x="${cx-W/2}" y=".5" width="${W}" height="${L}" rx=".55"/><rect class="glass" x="${cx-W/2+.15}" y="${.5+L-1.45}" width="${W-.3}" height="1" rx=".25"/>`;
+const carMv=(id,L,W,cls='')=>`<g id="${id}" class="${cls}"><rect class="car" x="${-L/2}" y="${-W/2}" width="${L}" height="${W}" rx=".55"/><rect class="glass" x="${L/2-1.45}" y="${-W/2+.15}" width="1" height="${W-.3}" rx=".25"/><rect class="tail" x="${-L/2}" y="${-W/2+.2}" width=".22" height="${W-.4}"/></g>`;
+
+// 한 줄의 도크. 로컬 +x = 차 진행 방향, 로컬 +y = 차 코 방향(마당 쪽)
+function row(o,G,no0,id){
+  const {v,bw,share}=G,bd=v.bd,col=ZC[o.z];
+  let h=`<rect class="pier" x="0" y="${bd}" width="${rowLen(o.c,bw,share)}" height="${APR}"/>`;
+  slots(o.c,bw,share).forEach((q,i)=>{
+    const cx=q.bay+bw/2,sc=id&&id.i==i;
+    if(q.dp)h+=`<rect class="pier" x="${q.pier}" y="0" width="${P}" height="${bd}"/><line class="fence" x1="${q.pier}" y1=".15" x2="${q.pier+P}" y2=".15"/>`;
+    h+=`<rect class="bay" x="${q.bay}" y="0" width="${bw}" height="${bd}"/><line class="bayline" x1="${q.bay}" y1="0" x2="${q.bay}" y2="${bd}"/><line class="bayline" x1="${q.bay+bw}" y1="0" x2="${q.bay+bw}" y2="${bd}"/>`;
+    h+=`<line class="stop" x1="${cx-.8}" y1="${bd-.25}" x2="${cx+.8}" y2="${bd-.25}"/>`;
+    if(sc){
+      h+=`<circle id="kid-${id.k}" class="kid" cx="${q.pier+P/2}" cy="${bd*.55}" r=".45"/><line id="gate-${id.k}" class="gate" x1="${q.pier}" y1="${bd}" x2="${q.pier+P}" y2="${bd}"/>`;
+      SCN[id.k]={o,cx,cy:.5+v.L/2,kidY:bd*.55,d:G.d};
+    }else h+=carTop(cx,v.L,v.W);
+    h+=`<line ${sc?`id="bar-${id.k}" `:''}class="barrier" x1="${q.bay}" y1="${bd}" x2="${q.bay+bw}" y2="${bd}"/>`;
+    h+=`<rect x="${cx-.8}" y="${bd+.35}" width="1.6" height=".3" fill="${col}"/><circle class="chg" cx="${q.pier>q.bay?q.bay+.35:q.bay+bw-.35}" cy="${bd+.5}" r=".25"/>`;
+    h+=`<text class="no" x="${cx}" y="${bd+1.6}">${no0+i+1}</text>`;
+  });
+  return `<g transform="translate(${o.x} ${o.y}) rotate(${o.a})">${h}</g>`;
+}
+
+function render(){
+  stopScene();SCN={};
+  const G=geo(S),{v,R,m,d,Gw,HZ,s,teeth,W,Hs,yi0,yb,PB,sy,sb}=G;
+  const cl=B+R/2,cr=W-B-R/2,ct=B+R/2,ly=sy+ST*.25,T=v.turn;
+  let g='',no=0;
+  // 대지 · 거리 · 하단 보행 띠
+  g+=`<rect class="lot" x="0" y="0" width="${W}" height="${PB}"/>`;
+  g+=`<rect class="walk" x="-10" y="${PB}" width="${W+20}" height="${WALK}"/><rect class="asph" x="-10" y="${sy}" width="${W+20}" height="${ST}"/>`;
+  g+=`<line class="cline" x1="-10" y1="${sy+ST/2}" x2="${W+10}" y2="${sy+ST/2}"/>`;
+  for(let x=8;x<W;x+=16)g+=arw(x,ly,180)+arw(x+8,sy+ST*.75,0);
+  g+=`<rect class="plaza" x="${B+R}" y="${yb}" width="${W-2*B-2*R}" height="${HZ}"/>`;
+  // 도로: ㄷ자 + 포켓 사이 U턴 골목
+  const hp=[];let body='',byp='';
+  teeth.forEach((q,j)=>{if(j<m-1){const gx0=q.x0+2*d+q.Wy,hd=gx0+R/2,hu=gx0+Gw-R/2;hp.push({gx0,hd,hu});
+    body+=` H${hd} V${yb} A${T} ${T} 0 0 0 ${hu} ${yb} V${ct}`;byp+=` M${hd} ${ct} H${hu}`}});
+  g+=`<path class="road" stroke-width="${R}" d="M${cl} ${sy} V${ct}${body} H${cr} V${sy}${byp}"/>`;
+  hp.forEach(h=>{const ri=T-R/2;
+    g+=`<path class="plant" d="M${h.hd+R/2} ${ct+R/2} V${yb} A${ri} ${ri} 0 0 0 ${h.hu-R/2} ${yb} V${ct+R/2}Z"/>`;
+    g+=`<path class="fence" d="M${h.gx0} ${yb} A${T+R/2} ${T+R/2} 0 0 0 ${h.gx0+Gw} ${yb}"/>`;
+    for(let y=yi0+4;y<yb;y+=12)g+=arw(h.hd,y,90)+arw(h.hu,y+6,-90);
+  });
+  for(let y=yb-4;y>yi0;y-=12)g+=arw(cl,y,-90);
+  for(let x=B+R+d+4;x<W-B-R-d;x+=12)g+=arw(x,ct,0);
+  for(let y=yi0+4;y<yb;y+=12)g+=arw(cr,y,90);
+  g+=`<text class="inout" x="${cl}" y="${PB-2.5}">IN</text><text class="inout" x="${cr}" y="${PB-2.5}">OUT</text>`;
+  // 포켓(이빨)마다: 모서리 식재 · 마당 · 도크 3면
+  const Z=m==1?null:m==2?['MAKE','EXPLORE']:['MAKE','QUIET','EXPLORE'];
+  teeth.forEach((q,j)=>{
+    const {x0,t,Wy}=q,last=j==m-1,yx=x0+d;
+    for(const x of [x0,x0+d+Wy])g+=`<rect class="plant" x="${x}" y="${B+R}" width="${d}" height="${d}"/>`+tree(x+d/2,B+R+d/2,Math.min(2.2,d/3));
+    g+=`<rect class="yard" x="${yx}" y="${yi0}" width="${Wy}" height="${Hs}"/>`;
+    const tr=Math.min(3,1+Wy*.05);
+    (m==1?[[.12,.3],[.2,.78],[.5,.52],[.78,.25],[.88,.72],[.36,.15],[.64,.85]]:[[.2,.3],[.8,.72],[.78,.22]]).forEach(([a,b])=>g+=tree(yx+Wy*a,yi0+Hs*b,tr));
+    [[.3,.45],[.36,.55],[.28,.62],[.62,.42],[.58,.6],[.46,.7]].forEach(([a,b])=>g+=`<circle class="kid" cx="${yx+Wy*a}" cy="${yi0+Hs*b}" r=".45"/>`);
+    if(Z){g+=`<text class="t-md" fill="${ZC[Z[j]]}" x="${yx+Wy/2}" y="${yi0+Hs/2}">${Z[j]} YARD</text><text class="t-xs" x="${yx+Wy/2}" y="${yi0+Hs/2+1.6}">포켓 마당</text>`}
+    else{
+      g+=`<text class="t-lg" x="${yx+Wy/2}" y="${yi0+Hs/2-1}">INNER CARE YARD</text><text class="t-sm" x="${yx+Wy/2}" y="${yi0+Hs/2+1.6}">아이 · 스태프 전용 보행 마당</text>`;
+      g+=`<text class="zone" fill="${ZC.MAKE}" x="${yx+1.2}" y="${yi0+2.4}" text-anchor="start">MAKE</text><text class="zone" fill="${ZC.QUIET}" x="${yx+Wy/2}" y="${yi0+2.4}">QUIET</text><text class="zone" fill="${ZC.EXPLORE}" x="${yx+Wy-1.2}" y="${yi0+2.4}" text-anchor="end">EXPLORE</text>`;
+    }
+    const zf=f=>Z?Z[j]:f;
+    [{x:x0,y:yb,a:-90,c:s,z:zf('MAKE')},{x:yx,y:B+R,a:0,c:t,z:zf('QUIET')},{x:yx+Wy+d,y:yi0,a:90,c:s,z:zf('EXPLORE')}].forEach((o,ri)=>{
+      const id=last&&ri==1?{i:Math.floor(t/2),k:'a'}:last&&ri==2?{i:Math.min(1,s-1),k:'d'}:null;
+      g+=row(o,G,no,id);no+=o.c;
+    });
+  });
+  // 인계 게이트 · 서비스 코어 (가운데 포켓 아래)
+  const tm=teeth[Math.floor(m/2)],tw=2*d+tm.Wy,gx=tm.x0+tw/2,cw=Math.min(20,tw/2-4),cy=yb+2.5,ch=HZ-5,px0=B+R,pw=W-2*B-2*R;
+  g+=`<rect class="core" x="${gx+3}" y="${cy}" width="${cw}" height="${ch}"/><text class="t-md" x="${gx+4.2}" y="${cy+2.6}" text-anchor="start">SERVICE CORE</text>`;
+  ['체크인 · 인계','스태프 · 응급 · 화장실','보관 · 세척 · 충전 관제'].forEach((l,i)=>g+=`<text class="t-xs" x="${gx+4.2}" y="${cy+4.8+i*1.7}" text-anchor="start">${l}</text>`);
+  g+=`<path class="fence" d="M${px0} ${yb} V${PB} H${gx-2.2} M${gx+2.2} ${PB} H${W-B-R} V${yb}"/>`;
+  g+=`<rect x="${gx-2.2}" y="${PB-.4}" width="4.4" height=".8" fill="#E6329A"/><text class="t-md" x="${gx}" y="${PB+2.1}">HANDOFF GATE</text>`;
+  g+=`<path class="walkline" d="M${gx} ${sy-.6} V${yb-3}" marker-end="url(#ah)"/>`;
+  if(m>1){const yw=PB-3.2,xs=teeth.map(q=>q.x0+d+q.Wy/2);
+    g+=`<path class="walkline" d="M${xs[0]} ${yb-3} V${yw} H${xs[m-1]} V${yb-3}${m==3?` M${xs[1]} ${yw} V${yb-3}`:''}"/>`;
+    g+=`<text class="t-kid" x="${xs[0]+1}" y="${yw-.8}" text-anchor="start">포켓 사이 이동 · 차도 횡단 0</text>`;
+  }else g+=`<text class="t-kid" x="${gx+1}" y="${yb-5}" text-anchor="start">사람 동선 · 차도 횡단 0</text>`;
+  // 치수 · 축척 · 방위
+  g+=`<path class="dim" d="M0 -3 H${W} M0 -4 V-2 M${W} -4 V-2"/><text class="t-dim" x="${W/2}" y="-4">${W.toFixed(1)} m</text>`;
+  g+=`<path class="dim" d="M-3 0 V${PB} M-4 0 H-2 M-4 ${PB} H-2"/><text class="t-dim" transform="translate(-4 ${PB/2}) rotate(-90)">${PB.toFixed(1)} m</text>`;
+  g+=`<rect x="0" y="${sb+2.5}" width="10" height="1" fill="#141925"/><rect x="10" y="${sb+2.5}" width="10" height="1" fill="#F6F6F2" stroke="#141925" stroke-width=".15"/>`;
+  g+=`<text class="t-dim" x="0" y="${sb+6}">0</text><text class="t-dim" x="10" y="${sb+6}">10</text><text class="t-dim" x="20" y="${sb+6}">20 m</text>`;
+  g+=`<g transform="translate(${W-2} ${sb+4})"><path d="M0 -2.2 L1 1.2 L0 .5 L-1 1.2Z" fill="#141925"/><text class="t-dim" x="0" y="-2.8">N</text></g>`;
+  // 배경 흐름 차량 (포켓 골목까지 전부 도는 경로)
+  const amb=`M${W+14} ${ly} H${cl} V${ct}${body} H${cr} V${ly} H-14`;
+  const ambLen=(W+14-cl)+(ly-ct)*2+(cr-cl)+hp.length*(2*(yb-ct)+Math.PI*T)+cr+14,dur=(ambLen/9).toFixed(1);
+  for(let i=0;i<3;i++)g+=`<g class="mv">${carMv('',v.L,v.W).replace(' id=""','')}<animateMotion dur="${dur}s" begin="-${(dur*i/3).toFixed(1)}s" repeatCount="indefinite" rotate="auto" path="${amb}"/></g>`;
+  // 출차 장면용: 바깥 ㄷ자 급행 경로 · 대기선 · 스캔 · 차량 A/D/B
+  g+=`<path id="xp" fill="none" d="M${W+14} ${ly} H${cl+RC} Q${cl} ${ly} ${cl} ${ly-RC} V${ct+RC} Q${cl} ${ct} ${cl+RC} ${ct} H${cr-RC} Q${cr} ${ct} ${cr} ${ct+RC} V${ly-RC} Q${cr} ${ly} ${cr-RC} ${ly} H-14"/>`;
+  g+=`<line id="hold-b" class="hold"/><line id="hold-d" class="hold"/><circle id="scan-a" class="scan" r="0"/><circle id="scan-d" class="scan" r="0"/>`;
+  g+=carMv('car-a',v.L,v.W)+carMv('car-d',v.L,v.W)+carMv('car-b',v.L,v.W);
+  g+=`<text id="lab-a" class="lab">A</text><text id="lab-d" class="lab">D</text><text id="lab-b" class="lab">B</text>`;
+
+  const svg=$('plan');FULL=[-8,-8,W+14,sb+16];
+  svg.setAttribute('viewBox',FULL.join(' '));
+  svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2D5BFF"/></marker></defs>`+g;
+  resetScene();applyAnim();
+
+  // 숫자 · 점검 · 비교표
+  $('nO').textContent=`${S.n}대`;$('rO').textContent=`${R.toFixed(1)} m`;
+  $('stats').innerHTML=[
+    ['부지 (가로 × 세로)',`${W.toFixed(1)} × ${PB.toFixed(1)} m`],
+    ['부지 면적',`${fmt(G.area)} ㎡ (${fmt(G.area/3.3058)}평)`],
+    ['1대당 면적',`${fmt(G.area/G.n)} ㎡`],
+    ['보행 마당 합계',`${fmt(G.yard)} ㎡`],
+    ['옆 차와 간격',G.gap.map(x=>x.toFixed(1)).join(' / ')+' m'],
+    ['도크 1칸',`${G.bw} × ${v.bd} m`],
+  ].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+  const c=[
+    [R>=6,R>=6?`도로 ${R} m — 후진 출차 가능 (직각주차 차로 6.0 m 이상)`:`도로 ${R} m — 후진 출차엔 6.0 m 이상 필요합니다.`],
+    [!S.share||v.both,!S.share?`차 옆 간격 ${G.gap[0].toFixed(1)} m — 부두로 문 열고 내리기 충분`:v.both?'2대 1부두 — PV5 패신저는 양쪽 슬라이딩 도어 기본이라 가능':'2대 1부두 — PV7 도어 구성 미공개. 양산형 공개 후 확인하세요.'],
+    [true,m>1?`포켓 사이 U턴 골목 폭 ${Gw.toFixed(1)} m (회전반경 ${T} m 기준)`:'한 마당 — U턴 골목 없음'],
+    [true,'보행자가 차도를 건너는 곳 0 · 진입과 퇴장 모두 우회전'],
+  ];
+  $('checks').innerHTML=c.map(([ok,t])=>`<li><span class="pill ${ok?'ok':'warn'}">${ok?'OK':'확인'}</span><span>${t}</span></li>`).join('');
+  table();
+}
+
+function table(){
+  let i=0,h=`<thead><tr><th>안</th><th>마당</th><th>부두</th><th class="n">부지</th><th class="n">면적</th><th class="n">1대당</th><th class="n">마당 합</th><th class="n">옆차 간격</th></tr></thead><tbody>`;
+  for(const m of [1,2,3])for(const sh of [false,true]){
+    const G=geo({...S,m,share:sh}),cur=m==S.m&&sh==S.share;
+    h+=`<tr class="${cur?'cur':''}" data-m="${m}" data-s="${+sh}" tabindex="0"><td>${'ABCDEF'[i++]}</td><td>${m==1?'한 마당':m+' 포켓'}</td><td>${sh?'2대 1부두':'1대 1부두'}</td><td class="n">${G.W.toFixed(0)} × ${G.PB.toFixed(0)} m</td><td class="n">${fmt(G.area)} ㎡</td><td class="n">${fmt(G.area/G.n)} ㎡</td><td class="n">${fmt(G.yard)} ㎡</td><td class="n">${G.gap.map(x=>x.toFixed(1)).join(' / ')} m</td></tr>`;
+  }
+  $('cmp').innerHTML=h+'</tbody>';
+}
+
+// ── 출차 장면 ──
+const ease=u=>u<.5?2*u*u:1-(-2*u+2)**2/2;
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const cub=(p,u)=>{const w=[(1-u)**3,3*u*(1-u)**2,3*u*u*(1-u),u**3];return [0,1].map(k=>p.reduce((a,q,i)=>a+q[k]*w[i],0))};
+const cubD=(p,u)=>[0,1].map(k=>3*(1-u)**2*(p[1][k]-p[0][k])+6*u*(1-u)*(p[2][k]-p[1][k])+3*u*u*(p[3][k]-p[2][k]));
+function pose(k,x,y,deg,show=true,rev=false){
+  const el=$('car-'+k),lb=$('lab-'+k);
+  el.style.display=lb.style.display=show?'':'none';
+  el.setAttribute('transform',`translate(${x} ${y}) rotate(${deg})`);el.classList.toggle('rev',rev);
+  lb.setAttribute('x',x);lb.setAttribute('y',y+.45);
+}
+function localPose(k,sc,pts,u,rev){ // 도크 로컬 3차 곡선 위 u
+  const [x,y]=cub(pts,u),[dx,dy]=cubD(pts,Math.min(.999,Math.max(.001,u)));
+  const [X,Y]=rot(sc.o,x,y);pose(k,X,Y,Math.atan2(dy,dx)*180/Math.PI+sc.o.a+(rev?180:0),true,rev);
+}
+function parked(k){const c=SCN[k],[X,Y]=rot(c.o,c.cx,c.cy);pose(k,X,Y,c.o.a+90)}
+function setLine(id,xp,l,R){
+  const el=$(id);if(!xp){el.style.display='none';return}
+  const p=xp.getPointAtLength(l),q=xp.getPointAtLength(l+.5),a=Math.atan2(q.y-p.y,q.x-p.x),nx=-Math.sin(a)*R/2,ny=Math.cos(a)*R/2;
+  Object.entries({x1:p.x-nx,y1:p.y-ny,x2:p.x+nx,y2:p.y+ny}).forEach(([k,v])=>el.setAttribute(k,v));el.style.display='';
+}
+function resetScene(){
+  if(!SCN.a)return;
+  parked('a');parked('d');pose('b',0,0,0,false);
+  ['hold-b','hold-d'].forEach(i=>$(i).style.display='none');
+  ['a','d'].forEach(k=>{$('scan-'+k).setAttribute('r',0);$('gate-'+k).classList.remove('on');$('bar-'+k).classList.remove('on');$('kid-'+k).setAttribute('cy',SCN[k].kidY)});
+  $('plan').setAttribute('viewBox',FULL.join(' '));
+}
+function stopScene(){cancelAnimationFrame(raf);raf=0;$('play').textContent='▶ 출차 장면 보기'}
+
+function play(){
+  if(raf){stopScene();resetScene();applyAnim();return}
+  const svg=$('plan'),xp=$('xp'),Lt=xp.getTotalLength(),R=S.R,A=SCN.a,D=SCN.d;
+  svg.classList.add('still');svg.pauseAnimations();
+  const samp=[];for(let l=0;l<=Lt;l+=.5){const p=xp.getPointAtLength(l);samp.push([l,p.x,p.y])}
+  const near=([x,y])=>samp.reduce((b,q)=>{const e=(q[1]-x)**2+(q[2]-y)**2;return e<b[1]?[q[0],e]:b},[0,1e9])[0];
+  const at=(k,l)=>{l=clamp(l,0,Lt-.5);const p=xp.getPointAtLength(l),q=xp.getPointAtLength(l+.5);pose(k,p.x,p.y,Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI)};
+  const revPts=c=>[[c.cx,c.cy],[c.cx,-R/2],[c.cx,-R/2],[c.cx-4.5,-R/2]];
+  const LA=near(rot(A.o,A.cx-4.5,-R/2)),LD=near(rot(D.o,D.cx-4.5,-R/2)),LAh=LA-12,LB0=Math.max(0,LAh-54);
+  const dockB=[[A.cx-4.5,-R/2],[A.cx,-R/2],[A.cx,-R/2],[A.cx,A.cy]];
+  const tEnd=Math.max(16,8.6+(Lt-LA)/V)+.4;
+  // 확대 영역: A·D·B 대기 지점을 감싸는 상자, 전체 도면 비율 유지
+  const pts=[rot(A.o,A.cx,A.cy),rot(D.o,D.cx,D.cy),[xp.getPointAtLength(LAh).x,xp.getPointAtLength(LAh).y]];
+  let [x0,y0,x1,y1]=[Math.min(...pts.map(p=>p[0]))-12,Math.min(...pts.map(p=>p[1]))-10,Math.max(...pts.map(p=>p[0]))+12,Math.max(...pts.map(p=>p[1]))+12];
+  const asp=FULL[3]/FULL[2];let zw=x1-x0,zh=zw*asp;if(zh<y1-y0){zh=y1-y0;zw=zh/asp}
+  const ZOOM=[(x0+x1-zw)/2,(y0+y1-zh)/2,zw,zh];let vb=[...FULL];
+  const CAP=[[0,'① 하차 끝 — 아이들이 부두를 따라 마당으로. 이번에 나갈 차는 A(위)와 D(출구 쪽) 두 대입니다.'],
+    [1.6,'② 옆문 닫힘 · 물리적 가림판(2차) 닫힘 — 부두는 비었고 잠겼습니다.'],
+    [3.2,'③ 카메라 인식(1차) + 관제가 두 도크 뒤쪽 도로를 예약 → 뒤따라오던 B는 빨간 대기선에서 멈춥니다.'],
+    [4.8,'④ A와 D 동시에 후진 — 서로 다른 구간이라 같이 움직여도 안 부딪힙니다. 꼬리를 들어온 쪽으로 틀어 도로와 나란히.'],
+    [8,'⑤ 정지 → 전진. 출구 쪽 D가 앞, A가 뒤 — 같은 방향·같은 속도라 간격이 그대로 유지됩니다.'],
+    [9.2,'⑥ 예약 해제 → B 출발. 나가는 A와 들어오는 B가 한 방향으로 줄지어 흐릅니다.'],
+    [11.2,'⑦ B가 방금 빈 도크에 전진 도킹합니다.'],
+    [13.4,'⑧ 바퀴 고정 · 충전 연결 · 도킹 확인 → 가림판 열림, 다음 아이 탑승 시작.']];
+  let t0=performance.now(),ci=-1;$('play').textContent='■ 멈춤';
+  const tick=now=>{
+    const t=(now-t0)/1000;
+    const c=CAP.findLastIndex(q=>t>=q[0]);if(c!=ci){ci=c;$('cap').textContent=CAP[c][1]}
+    ['a','d'].forEach(k=>{const s=SCN[k];
+      $('kid-'+k).setAttribute('cy',s.kidY+(s.d+1.5-s.kidY)*ease(clamp(t/1.6,0,1)));
+      const closed=t>=2&&!(k=='a'&&t>=14);$('gate-'+k).classList.toggle('on',closed);$('bar-'+k).classList.toggle('on',closed);
+      const sc=$('scan-'+k),u=t>=3.2&&t<4.8?((t-3.2)/.8)%1:0,[X,Y]=rot(s.o,s.cx,s.cy);
+      sc.setAttribute('cx',X);sc.setAttribute('cy',Y);sc.setAttribute('r',u?1+u*5:0);sc.style.opacity=1-u;
+    });
+    setLine('hold-b',t>=3.2&&t<9.2&&xp,LA-9,R);setLine('hold-d',t>=3.2&&t<8.6&&xp,LD-9,R);
+    // A · D: 후진 → 정지 → 전진
+    [['a',A,LA],['d',D,LD]].forEach(([k,s,L0])=>{
+      if(t<4.8)parked(k);
+      else if(t<8)localPose(k,s,revPts(s),ease((t-4.8)/3.2),true);
+      else if(t<8.6)localPose(k,s,revPts(s),1,false);
+      else{const l=L0+V*(t-8.6);l<Lt-1?at(k,l):pose(k,0,0,0,false)}
+    });
+    // B: 진입 → 대기 → 빈 도크로
+    if(t<9.2)at('b',Math.min(LAh,LB0+V*t));
+    else if(t<11.2)at('b',LAh+(LA-LAh)*ease((t-9.2)/2));
+    else localPose('b',A,dockB,ease(clamp((t-11.2)/2.2,0,1)),false);
+    const tgt=t<9.4||(t>10.8&&t<14.4)?ZOOM:FULL;vb=vb.map((v,i)=>v+(tgt[i]-v)*.06);
+    svg.setAttribute('viewBox',vb.join(' '));
+    if(t<tEnd)raf=requestAnimationFrame(tick);
+    else{stopScene();resetScene();applyAnim();$('play').textContent='↺ 다시 보기';
+      $('cap').textContent='끝 — 들어오는 차와 나가는 차는 마주칠 일이 없고, 부딪힐 수 있는 유일한 순간(후진)은 관제가 뒤쪽 도로를 비운 뒤에만 일어납니다.'}
+  };
+  raf=requestAnimationFrame(tick);
+}
+
+function applyAnim(){const on=$('anim').checked,svg=$('plan');svg.classList.toggle('still',!on);on?svg.unpauseAnimations():svg.pauseAnimations()}
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)$('anim').checked=false;
+$('veh').onchange=e=>{S.veh=e.target.value;render()};
+document.querySelectorAll('input[name=m]').forEach(el=>el.onchange=()=>{S.m=+el.value;render()});
+document.querySelectorAll('input[name=sh]').forEach(el=>el.onchange=()=>{S.share=el.value=='1';render()});
+$('n').oninput=e=>{S.n=+e.target.value;render()};
+$('r').oninput=e=>{S.R=+e.target.value;render()};
+$('anim').onchange=()=>{if(!raf)applyAnim()};
+$('play').onclick=play;
+const pick=tr=>{S.m=+tr.dataset.m;S.share=tr.dataset.s=='1';$('m'+S.m).checked=true;$('sh'+(+S.share)).checked=true;render()};
+$('cmp').onclick=e=>{const tr=e.target.closest('tr[data-m]');if(tr)pick(tr)};
+$('cmp').onkeydown=e=>{const tr=e.target.closest('tr[data-m]');if(tr&&(e.key=='Enter'||e.key==' ')){e.preventDefault();pick(tr)}};
+render();
+</script>
+
+<style>
+/* 도면 시트: 종이 위 도면이라 테마와 무관하게 고정 색 */
+#plan text{font-family:"IBM Plex Mono","Noto Sans KR",monospace;text-anchor:middle;fill:#141925}
+#plan .lot{fill:#F1F1EC}
+#plan .walk{fill:#D9DCE0}
+#plan .asph{fill:#3B404B}
+#plan .road{fill:none;stroke:#3B404B;stroke-linejoin:round}
+#plan .cline{stroke:#F2C94C;stroke-width:.2;stroke-dasharray:2 1.5}
+#plan .arw{fill:none;stroke:#fff;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+#plan .inout{font-size:1.5px;font-weight:600;fill:#fff}
+#plan .bay{fill:#4A4F5B}
+#plan .bayline{stroke:#fff;stroke-width:.12}
+#plan .pier{fill:#E6E2D8}
+#plan .plant{fill:#CFDBC5}
+#plan .tree{fill:#B5C9A7;stroke:#97AE88;stroke-width:.15}
+#plan .yard{fill:#DDE6D4}
+#plan .plaza{fill:#E9E6DE}
+#plan .core{fill:#fff;stroke:#141925;stroke-width:.25}
+#plan .car{fill:#FBFBFA;stroke:#8E95A1;stroke-width:.1}
+#plan .glass{fill:#1E2433}
+#plan .tail{fill:#E5484D}
+#plan .rev .tail{fill:#fff;stroke:#E5484D;stroke-width:.08}
+#plan .stop{stroke:#F2C94C;stroke-width:.2}
+#plan .chg{fill:#0E9F6E}
+#plan .no{font-size:.85px;fill:#5A6376}
+#plan .fence{fill:none;stroke:#141925;stroke-width:.3}
+#plan .barrier{stroke:#E6329A;stroke-width:.3;stroke-dasharray:.5 .3}
+#plan .barrier.on{stroke-width:.5;stroke-dasharray:none}
+#plan .gate{stroke:#E6329A;stroke-width:.5;opacity:0}
+#plan .gate.on{opacity:1}
+#plan .hold{stroke:#E5484D;stroke-width:.7}
+#plan .scan{fill:none;stroke:#2D5BFF;stroke-width:.25}
+#plan .lab{font-size:1.3px;font-weight:600;fill:#E6329A;pointer-events:none}
+#plan .kid{fill:#2D5BFF}
+#plan .walkline{fill:none;stroke:#2D5BFF;stroke-width:.35;stroke-dasharray:.9 .6}
+#plan .dim{fill:none;stroke:#5A6376;stroke-width:.1}
+#plan .t-lg{font-size:2.2px;font-weight:600;letter-spacing:.12px}
+#plan .t-md{font-size:1.4px;font-weight:600}
+#plan .t-sm{font-size:1.2px;font-family:"Noto Sans KR",sans-serif;fill:#5A6376}
+#plan .t-xs{font-size:1px;font-family:"Noto Sans KR",sans-serif;fill:#5A6376}
+#plan .t-dim{font-size:1.1px;fill:#5A6376}
+#plan .t-kid{font-size:1.1px;font-family:"Noto Sans KR",sans-serif;font-weight:700;fill:#2D5BFF}
+#plan .zone{font-size:1.3px;font-weight:600;letter-spacing:.1px}
+#plan.still .mv{display:none}
+</style>
