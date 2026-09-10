@@ -67,7 +67,8 @@ td.n,th.n{text-align:right}
 #cmp tr.cur td{color:var(--navy);font-weight:800}
 #cmp tr.cur td:first-child::before{content:"";display:inline-block;width:6px;height:6px;background:var(--navy);margin-right:8px;vertical-align:1px}
 .cap{font-size:12px;color:var(--faint);padding:10px 12px;margin:0}
-.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.how .wide{grid-column:1/-1}
 .how ol,.how ul{margin:0;padding-left:0;display:grid;gap:10px;font-size:14px;list-style:none}
 .how ol{counter-reset:k}
 .how ol li{counter-increment:k;display:grid;grid-template-columns:22px 1fr}
@@ -86,7 +87,7 @@ td.n,th.n{text-align:right}
   <header>
     <div class="eyebrow">AFTERSPACE</div>
     <h1>Care Yard <em>배치도</em></h1>
-    <p class="lede">PBV 30대가 머무는 도크, 아이들이 쓰는 보행 마당, 서비스 코어, 인계 게이트의 배치. 차로를 ㄷ자로 열어 보행자가 차도를 건너지 않게 했습니다.</p>
+    <p class="lede">PV5 30대 규모의 평면 스터디. 차는 바깥을 한 방향으로 돌고, 아이는 안쪽 마당에서만 움직입니다.</p>
     <div class="kpis" id="kpis"></div>
   </header>
 
@@ -99,8 +100,54 @@ td.n,th.n{text-align:right}
       <div class="sheet"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Care Yard 평면 배치도"></svg></div>
       <div class="tbl">
         <table id="cmp"></table>
-        <p class="cap">차종, 도크 수, 도로 폭은 오른쪽 설정을 따름. 행을 누르면 도면이 바뀜.<br>크기 비교 기준: 초등학교 운동장 3,000㎡ (학생 600명 이하 법정 최소), 어린이공원 1,500㎡ (법정 최소), 농구코트 420㎡, 84㎡ 아파트</p>
+        <p class="cap">차종, 도크 수, 도로 폭은 오른쪽 설정을 따름. 행을 누르면 도면이 바뀜.<br>크기 비교 기준: 초등학교 운동장 3,000㎡ (학생 600명 이하 법정 최소), 농구코트 420㎡ (28 × 15 m)</p>
       </div>
+      <section class="how">
+      <div class="box">
+        <h2>보호자 동선</h2>
+        <ul>
+          <li>인도에서 HANDOFF GATE로 바로 들어옴. 단지 안에서는 차도를 건너지 않음</li>
+          <li>길 건너편에서 오면 게이트 앞 횡단보도 이용 (공공도로 구간)</li>
+          <li>인계는 게이트 옆 서비스 코어 체크인 데스크에서</li>
+          <li>체험이 끝날 때까지 PARENT LOUNGE에서 대기. 체험 중 마당은 아이와 스태프만</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h2>차량 동선</h2>
+        <ol>
+          <li>거리에서 우회전으로 진입</li>
+          <li>단지 안은 시계방향 일방통행. 도크는 늘 진행 방향 오른쪽</li>
+          <li>전진 도킹 후 바퀴 고정, 충전 연결, 도킹 확인</li>
+          <li>승하차는 부두 쪽 문으로만. 반대쪽 문은 잠김</li>
+          <li>가림판이 닫히면 후진 출차, 오른쪽 출구로 우회전 퇴장</li>
+        </ol>
+      </div>
+      <div class="box">
+        <h2>동시 출차</h2>
+        <ul>
+          <li>들어오는 차와 나가는 차가 같은 방향으로 움직여 마주칠 일이 없음</li>
+          <li>부딪힐 수 있는 건 후진으로 도로에 나오는 순간뿐. 관제가 그 도크 뒤 구간을 비우고, 뒤차는 대기선에서 정지 (공항 푸시백과 같은 방식)</li>
+          <li>출구에 가까운 차부터 순서대로. 같은 변은 한 대씩, 다른 변끼리는 동시에 출차 가능</li>
+          <li>30대가 모두 빠지는 데 약 5~10분 (대당 후진 10~15초로 잡은 추정). 실제로는 수업 끝나는 시각이 달라 나뉘어 나감</li>
+        </ul>
+      </div>
+      <div class="box wide">
+        <h2>차량 제원</h2>
+        <div class="tbl" style="border:0">
+          <table>
+            <thead><tr><th>차종</th><th class="n">전장 × 전폭 × 전고</th><th class="n">휠베이스</th><th>비고</th></tr></thead>
+            <tbody>
+              <tr><td>PV5 패신저</td><td class="n">4,695 × 1,895 × 1,905</td><td class="n">2,995</td><td>5인승, 회전반경 5.5 m</td></tr>
+              <tr><td>PV5 롱 / 하이루프</td><td class="n">4,890 × 1,895 × 2,200</td><td class="n">2,995</td><td>카고 계열</td></tr>
+              <tr><td>PV5 WAV</td><td class="n">PV5 차체 기반</td><td class="n">—</td><td>휠체어석, 측면 경사로</td></tr>
+              <tr><td>PV7 콘셉트</td><td class="n">5,270 × 2,065 × 2,120</td><td class="n">3,390</td><td>양산형 9월 14일 공개</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>PV5 패신저는 양쪽 슬라이딩 도어가 기본 사양 (열림 폭 775 mm, 스텝 높이 399 mm). 2대 1부두 배치가 가능한 이유.</p><p>PV7은 콘셉트 수치. 양산형 제원과 도어 구성은 9월 14일 공개 후 반영.</p>
+        <p class="src">단위 mm. 출처 <a href="https://www.kia.com/kr/pbv/vehicles/pv5-passenger/specification">기아 PV5 패신저 제원</a> · <a href="https://www.hyundaimotorgroup.com/ko/story/CONT0000000000184521">현대차그룹 PV5 시승기(회전반경)</a> · <a href="https://www.kia.com/uk/pbv/lineup/pv5-passenger/">Kia UK PV5 Passenger(양측 도어)</a> · <a href="https://en.wikipedia.org/wiki/Kia_PV5">Wikipedia PV5(롱·하이루프)</a> · <a href="https://www.kianewscenter.com/news/europe-news/introducing-kia-pv5-wav--a-new-era-of-wheelchair-accessible-electric-vehicles/s/1195653c-051b-4c8d-8430-cc67b56f78b5">Kia PV5 WAV</a> · <a href="https://electrek.co/2026/08/31/kia-confirms-pv7-debut-previews-larger-ev-van-video/">Electrek PV7</a></p>
+      </div>
+    </section>
     </div>
 
     <aside class="panel">
@@ -131,6 +178,11 @@ td.n,th.n{text-align:right}
           <small>부두 하나를 두 차가 같이 씀. 한 대는 왼쪽 문, 한 대는 오른쪽 문 사용</small>
         </div>
         <div class="ctl">
+          <label for="gp">옆 차 간격 (부두 쪽) <output id="gpO"></output></label>
+          <input id="gp" type="range" min="1.6" max="3" step="0.1" value="2.1">
+          <small>차 옆면 사이 거리. 부두 폭은 이 값에서 약 0.7 m를 뺀 만큼</small>
+        </div>
+        <div class="ctl">
           <label for="n">도크(차량) 수 <output id="nO"></output></label>
           <input id="n" type="range" min="20" max="40" step="2" value="30">
         </div>
@@ -150,7 +202,7 @@ td.n,th.n{text-align:right}
 
       <div class="box">
         <h2>도크 간 도보</h2>
-        <p class="note">도면에서 도크를 두 번 누르면 출발과 도착으로 지정</p>
+        <p class="note">도크를 누르면 출발, 한 번 더 누르면 도착. 남색 서비스 코어를 누르면 코어까지 경로</p>
         <dl class="stats" id="wstat"></dl>
         <p class="note">초등 4학년 기준 보폭 0.55 m, 초당 2걸음(1.1 m/s)으로 잡은 추정치. 분홍 네모는 4배속으로 걷는 아이</p>
       </div>
@@ -158,73 +210,39 @@ td.n,th.n{text-align:right}
       <div class="box">
         <h2>범례</h2>
         <div class="legend">
-          <span class="sw" style="background:#2F3547"></span><span>차도, 흰 화살표 방향 일방통행</span>
-          <span class="sw" style="background:#E2E5EB"></span><span>부두와 에이프런, 아이가 걷는 바닥</span>
-          <span class="sw" style="background:repeating-linear-gradient(90deg,#FF1F78 0 5px,transparent 5px 8px)"></span><span>물리적 가림판, 차가 움직이는 동안 닫힘</span>
-          <span class="sw" style="background:#1B2A5E;height:3px"></span><span>펜스, 보행자의 차도 진입 차단</span>
+          <span class="sw" style="background:#D5DBE3"></span><span>차도, 흰 화살표 방향 일방통행</span>
+          <span class="sw" style="background:#C7CED9"></span><span>도크 칸</span>
+          <span class="sw" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px #D9DCE2"></span><span>보행 바닥 (부두, 에이프런, 광장, 인도)</span>
+          <span class="sw" style="background:#DCEBDC"></span><span>마당</span>
+          <span class="sw" style="background:#FF1F78;height:3px"></span><span>물리적 가림판, 차가 움직이는 동안 닫힘</span>
+          <span class="sw" style="background:#1B2A5E;height:2px;opacity:.55"></span><span>펜스, 보행자의 차도 진입 차단</span>
           <span class="sw" style="background:#FF2D3D;height:4px"></span><span>대기선, 앞차가 후진하는 동안 서는 자리</span>
-          <span class="sw" style="background:repeating-linear-gradient(90deg,#1B2A5E 0 5px,transparent 5px 8px)"></span><span>보행 동선</span>
+          <span class="sw" style="background:repeating-linear-gradient(90deg,#1B2A5E 0 3px,transparent 3px 7px);height:3px"></span><span>보행 동선</span>
         </div>
       </div>
     </aside>
   </div>
 
-  <section class="how">
-    <div class="box">
-      <h2>차량 동선</h2>
-      <ol>
-        <li>거리에서 우회전으로 진입</li>
-        <li>단지 안은 시계방향 일방통행. 도크는 늘 진행 방향 오른쪽</li>
-        <li>전진 도킹 후 바퀴 고정, 충전 연결, 도킹 확인</li>
-        <li>승하차는 부두 쪽 문으로만. 반대쪽 문은 잠김</li>
-        <li>가림판이 닫히면 후진 출차, 오른쪽 출구로 우회전 퇴장</li>
-      </ol>
-    </div>
-    <div class="box">
-      <h2>동시 출차</h2>
-      <ul>
-        <li>들어오는 차와 나가는 차가 같은 방향으로 움직여 마주칠 일이 없음</li>
-        <li>부딪힐 수 있는 건 후진으로 도로에 나오는 순간뿐. 관제가 그 도크 뒤 구간을 비우고, 뒤차는 대기선에서 정지 (공항 푸시백과 같은 방식)</li>
-        <li>출구에 가까운 차부터 순서대로. 같은 변은 한 대씩, 다른 변끼리는 동시에 출차 가능</li>
-        <li>30대가 모두 빠지는 데 약 5~10분 (대당 후진 10~15초로 잡은 추정). 실제로는 수업 끝나는 시각이 달라 나뉘어 나감</li>
-      </ul>
-    </div>
-    <div class="box">
-      <h2>차량 제원</h2>
-      <div class="tbl" style="border:0">
-        <table>
-          <thead><tr><th>차종</th><th class="n">전장 × 전폭 × 전고</th><th class="n">휠베이스</th><th>비고</th></tr></thead>
-          <tbody>
-            <tr><td>PV5 패신저</td><td class="n">4,695 × 1,895 × 1,905</td><td class="n">2,995</td><td>5인승, 회전반경 5.5 m</td></tr>
-            <tr><td>PV5 롱 / 하이루프</td><td class="n">4,890 × 1,895 × 2,200</td><td class="n">2,995</td><td>카고 계열</td></tr>
-            <tr><td>PV5 WAV</td><td class="n">PV5 차체 기반</td><td class="n">—</td><td>휠체어석, 측면 경사로</td></tr>
-            <tr><td>PV7 콘셉트</td><td class="n">5,270 × 2,065 × 2,120</td><td class="n">3,390</td><td>양산형 9월 14일 공개</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>PV5 패신저는 양쪽 슬라이딩 도어가 기본 사양 (열림 폭 775 mm, 스텝 높이 399 mm). 2대 1부두 배치가 가능한 이유.</p><p>PV7은 콘셉트 수치. 양산형 제원과 도어 구성은 9월 14일 공개 후 반영.</p>
-      <p class="src">단위 mm. 출처 <a href="https://www.kia.com/kr/pbv/vehicles/pv5-passenger/specification">기아 PV5 패신저 제원</a> · <a href="https://www.hyundaimotorgroup.com/ko/story/CONT0000000000184521">현대차그룹 PV5 시승기(회전반경)</a> · <a href="https://www.kia.com/uk/pbv/lineup/pv5-passenger/">Kia UK PV5 Passenger(양측 도어)</a> · <a href="https://en.wikipedia.org/wiki/Kia_PV5">Wikipedia PV5(롱·하이루프)</a> · <a href="https://www.kianewscenter.com/news/europe-news/introducing-kia-pv5-wav--a-new-era-of-wheelchair-accessible-electric-vehicles/s/1195653c-051b-4c8d-8430-cc67b56f78b5">Kia PV5 WAV</a> · <a href="https://electrek.co/2026/08/31/kia-confirms-pv7-debut-previews-larger-ev-van-video/">Electrek PV7</a></p>
-    </div>
-  </section>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-const B=3,APR=2,P=1.4,WALK=3,ST=8,RC=3,V=12;
+const B=3,APR=2,WALK=3,ST=8,RC=3,V=12;
 const VEH={
   pv5:{name:'PV5 패신저',L:4.695,W:1.895,turn:5.5,bw:2.6,bd:5.5,both:true},
   pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:2.8,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
 };
 const ZC={MAKE:'#FF2D3D',QUIET:'#8A1FFF',EXPLORE:'#00B84A'}; // AFTERSPACE/art · story · nature
-const S={veh:'pv5',m:1,share:false,n:30,R:6.5};
-let SCN={},raf=0,FULL=null,DOCKS=[],CUR=null,WK={a:4,b:null},wraf=0;
+const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1};
+let P=1.4; // 부두 폭, geo()가 옆 차 간격에서 계산
+let SCN={},raf=0,FULL=null,CUR=null,WK={a:4,b:null},wraf=0;
 const STEP=.55,CAD=2; // ponytail: 초등 4학년(10세) 보폭 0.55 m · 초당 2걸음 추정치, 실측값 생기면 교체
 
 const rot=(o,x,y)=>{const a=o.a*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return [o.x+x*c-y*s,o.y+x*s+y*c]};
 const rowLen=(c,bw,sh)=>sh?Math.floor(c/2)*(2*bw+P)+(c%2)*(P+bw):c*(P+bw);
 const fmt=x=>Math.round(x).toLocaleString();
-// 기준: 초등 운동장 법정 최소 3,000㎡ · 어린이공원 법정 최소 1,500㎡ · 농구코트 28×15=420㎡ · 국민평형 84㎡
-const feel=a=>a>=1500?`어린이공원 ${(a/1500).toFixed(1)}개 · 운동장 ${(a/3000).toFixed(2)}개`:a>=380?`농구코트 ${(a/420).toFixed(1)}면`:`84㎡ 집 ${(a/84).toFixed(1)}채`;
+// 크기 비교: 초등학교 운동장 법정 최소 3,000㎡ · 농구코트 28×15 = 420㎡
+const feel=a=>`운동장 ${(a/3000).toFixed(2)}개 · 농구코트 ${(a/420).toFixed(1)}면`;
 // 각 차의 칸·부두 로컬 x. 2대 1부두면 [칸][부두][칸] 쌍, 홀수 남으면 마지막은 1대 1부두
 function slots(c,bw,sh){
   const out=[];
@@ -235,65 +253,71 @@ function slots(c,bw,sh){
   return out;
 }
 
+// 배치 계산 (DOM 없음): 포켓 · 도크 줄 · 도크별 보행 좌표 · 서비스 코어
 function geo(S){
   const v=VEH[S.veh],{n,R,m,share}=S,bw=v.bw,d=v.bd+APR,Gw=2*v.turn+R;
+  P=S.gap-(bw-v.W);
   const HZ=m>1?Math.max(15,v.turn+R/2+6):15, s=Math.max(2,Math.round(n/m*.3));
   const teeth=[];let x=B+R;
   for(let j=0;j<m;j++){const c=Math.floor(n/m)+(j<n%m?1:0),t=c-2*s,Wy=rowLen(t,bw,share);teeth.push({x0:x,t,Wy});x+=2*d+Wy+(j<m-1?Gw:0)}
   const W=x+R+B,Hs=rowLen(s,bw,share),yi0=B+R+d,yb=yi0+Hs,PB=yb+HZ;
-  return {v,n,R,m,share,bw,d,Gw,HZ,s,teeth,W,Hs,yi0,yb,PB,sy:PB+WALK,sb:PB+WALK+ST,
+  // 도크 줄: 로컬 +x = 차 진행 방향, 로컬 +y = 차 코(마당 쪽)
+  const rows=[],docks=[];let no=0;
+  teeth.forEach((q,j)=>{const yx=q.x0+d;rows.push({x:q.x0,y:yb,a:-90,c:s,j,f:0},{x:yx,y:B+R,a:0,c:q.t,j,f:1},{x:yx+q.Wy+d,y:yi0,a:90,c:s,j,f:2})});
+  rows.forEach(o=>{o.no0=no;slots(o.c,bw,share).forEach(q=>{const px=q.pier+P/2;
+    docks.push({no:++no,j:o.j,door:rot(o,px,v.bd*.55),apron:rot(o,px,v.bd+APR/2),edge:rot(o,px,d+.6)})})});
+  const jc=Math.floor(m/2),tm=teeth[jc],gx=tm.x0+(2*d+tm.Wy)/2,cw=Math.min(20,(2*d+tm.Wy)/2-4),cy=yb+1.5,ch=HZ-6;
+  return {v,n,R,m,share,bw,d,Gw,HZ,s,teeth,W,Hs,yi0,yb,PB,sy:PB+WALK,sb:PB+WALK+ST,rows,docks,yw:PB-2.2,
+    core:{x:gx+3,y:cy,w:cw,h:ch,jc,gx,door:[gx+3,cy+ch/2]},
     yard:teeth.reduce((a,q)=>a+q.Wy*Hs,0),area:W*PB,gap:share?[bw-v.W,bw-v.W+P]:[bw-v.W+P]};
 }
-// 각 도크 에이프런 → 서비스 코어 문까지 걷는 거리(직각 경로). 다른 포켓이면 아래 보행 띠로 돌아감
-function coreDist(G){
-  const {teeth,m,d,bw,share,s,yi0,yb,HZ,PB}=G,jc=Math.floor(m/2),tm=teeth[jc],Cx=tm.x0+d+tm.Wy/2+3,Cy=yb+HZ/2,yw=PB-2.2;
-  const all=[];
-  teeth.forEach((q,j)=>{
-    const yx=q.x0+d,lx=c=>slots(c,bw,share).map(o=>o.bay+bw/2);
-    const pts=[...lx(s).map(x=>[yx,yb-x]),...lx(q.t).map(x=>[yx+x,B+G.R+d]),...lx(s).map(x=>[yx+q.Wy,yi0+x])];
-    pts.forEach(([x,y])=>all.push(Math.abs(x-Cx)+(j==jc?Math.abs(y-Cy):(yw-y)+(yw-Cy))));
-  });
-  return {max:Math.max(...all),avg:all.reduce((a,b)=>a+b,0)/all.length};
+// 아이 보행 경로: 차 문 → 부두 → 에이프런 → 마당 가로지름. 다른 포켓이면 하단 보행로 경유. T = 도크 또는 'core'
+function walkPath(G,A,T){
+  const {yw,core,yb}=G,p=[A.door,A.apron,A.edge],lx=core.gx+1.5;
+  if(T=='core')return A.j==core.jc?[...p,[lx,yb-.3],[lx,core.door[1]],core.door]:[...p,[A.edge[0],yw],[lx,yw],[lx,core.door[1]],core.door];
+  if(A.j!=T.j)p.push([A.edge[0],yw],[T.edge[0],yw]);
+  return [...p,T.edge,T.apron,T.door];
 }
+const plen=pts=>pts.slice(1).reduce((a,q,i)=>a+Math.hypot(q[0]-pts[i][0],q[1]-pts[i][1]),0);
+function coreDist(G){const all=G.docks.map(d=>plen(walkPath(G,d,'core')));return {max:Math.max(...all),avg:all.reduce((a,b)=>a+b,0)/all.length}}
+const walkTime=L=>{const s=L/STEP/CAD;return s<60?`${Math.round(s)}초`:`${Math.floor(s/60)}분 ${Math.round(s%60)}초`};
 
-const arw=(x,y,deg)=>`<path class="arw" d="M-.9 -.8 L.7 0 L-.9 .8" transform="translate(${x} ${y}) rotate(${deg})"/>`;
-const tree=(x,y,r)=>`<circle class="tree" cx="${x}" cy="${y}" r="${r}"/>`;
-const carTop=(cx,L,W)=>`<rect class="car" x="${cx-W/2}" y=".5" width="${W}" height="${L}" rx=".55"/><rect class="glass" x="${cx-W/2+.15}" y="${.5+L-1.45}" width="${W-.3}" height="1" rx=".25"/>`;
-const carMv=(id,L,W,cls='')=>`<g id="${id}" class="${cls}"><rect class="car" x="${-L/2}" y="${-W/2}" width="${L}" height="${W}" rx=".55"/><rect class="glass" x="${L/2-1.45}" y="${-W/2+.15}" width="1" height="${W-.3}" rx=".25"/><rect class="tail" x="${-L/2}" y="${-W/2+.2}" width=".22" height="${W-.4}"/></g>`;
+// ── 그래픽 조각 (면 위주, 외곽선 없음) ──
+const arw=(x,y,deg,c='arw')=>`<path class="${c}" d="M-.9 -.9 L.6 0 L-.9 .9 L-.45 0Z" transform="translate(${x} ${y}) rotate(${deg})"/>`;
+const tree=(x,y,r)=>`<circle class="tree" cx="${x}" cy="${y}" r="${r}"/><circle class="tree-hi" cx="${x-r*.22}" cy="${y-r*.22}" r="${r*.55}"/>`;
+const tag=(x,y,col,t,cls='zone')=>`<rect x="${x}" y="${y-.8}" width=".8" height=".8" fill="${col}"/><text class="${cls}" x="${x+1.2}" y="${y}" text-anchor="start">${t}</text>`;
+const carTop=(cx,L,W)=>{const x=cx-W/2;return `<rect class="shd" x="${x+.15}" y=".75" width="${W}" height="${L}" rx=".6"/><rect class="car" x="${x}" y=".5" width="${W}" height="${L}" rx=".6"/><rect class="roof" x="${x+.25}" y="1.5" width="${W-.5}" height="${L-2.75}" rx=".3"/><rect class="glass" x="${x+.3}" y=".85" width="${W-.6}" height=".45" rx=".2"/><rect class="glass" x="${x+.18}" y="${.5+L-1.55}" width="${W-.36}" height=".95" rx=".3"/>`};
+const carMv=(id,L,W)=>`<g${id?` id="${id}"`:''}><rect class="shd" x="${-L/2+.25}" y="${-W/2+.15}" width="${L}" height="${W}" rx=".6"/><rect class="car" x="${-L/2}" y="${-W/2}" width="${L}" height="${W}" rx=".6"/><rect class="roof" x="${-L/2+1}" y="${-W/2+.25}" width="${L-2.75}" height="${W-.5}" rx=".3"/><rect class="glass" x="${-L/2+.35}" y="${-W/2+.3}" width=".45" height="${W-.6}" rx=".2"/><rect class="glass" x="${L/2-1.55}" y="${-W/2+.18}" width=".95" height="${W-.36}" rx=".3"/><rect class="tail" x="${-L/2}" y="${-W/2+.25}" width=".16" height="${W-.5}"/></g>`;
 
-// 한 줄의 도크. 로컬 +x = 차 진행 방향, 로컬 +y = 차 코 방향(마당 쪽)
-function row(o,G,no0,id){
-  const {v,bw,share}=G,bd=v.bd,col=ZC[o.z];
-  let h=`<rect class="pier" x="0" y="${bd}" width="${rowLen(o.c,bw,share)}" height="${APR}"/>`;
+function row(o,G,col,id){
+  const {v,bw,share,d}=G,bd=v.bd;
+  let h=`<rect class="ped" x="0" y="${bd}" width="${rowLen(o.c,bw,share)}" height="${APR}"/>`;
   slots(o.c,bw,share).forEach((q,i)=>{
-    const cx=q.bay+bw/2,sc=id&&id.i==i;
-    if(q.dp)h+=`<rect class="pier" x="${q.pier}" y="0" width="${P}" height="${bd}"/><line class="fence" x1="${q.pier}" y1=".15" x2="${q.pier+P}" y2=".15"/>`;
-    h+=`<rect class="bay" x="${q.bay}" y="0" width="${bw}" height="${bd}"/><line class="bayline" x1="${q.bay}" y1="0" x2="${q.bay}" y2="${bd}"/><line class="bayline" x1="${q.bay+bw}" y1="0" x2="${q.bay+bw}" y2="${bd}"/>`;
-    h+=`<line class="stop" x1="${cx-.8}" y1="${bd-.25}" x2="${cx+.8}" y2="${bd-.25}"/>`;
-    if(sc){
-      h+=`<rect id="kid-${id.k}" class="kid" x="${q.pier+P/2-.4}" y="${bd*.55-.4}" width=".8" height=".8"/><line id="gate-${id.k}" class="gate" x1="${q.pier}" y1="${bd}" x2="${q.pier+P}" y2="${bd}"/>`;
-      SCN[id.k]={o,cx,cy:.5+v.L/2,kidY:bd*.55,d:G.d};
-    }else h+=carTop(cx,v.L,v.W);
-    h+=`<line ${sc?`id="bar-${id.k}" `:''}class="barrier" x1="${q.bay}" y1="${bd}" x2="${q.bay+bw}" y2="${bd}"/>`;
-    h+=`<rect x="${cx-.8}" y="${bd+.35}" width="1.6" height=".3" fill="${col}"/><rect class="chg" x="${q.pier>q.bay?q.bay+.1:q.bay+bw-.6}" y="${bd+.25}" width=".5" height=".5"/>`;
-    h+=`<text class="no" x="${cx}" y="${bd+1.6}">${no0+i+1}</text><rect class="hit" data-no="${no0+i+1}" x="${Math.min(q.bay,q.pier)}" y="0" width="${bw+P}" height="${G.d}" fill="transparent"/>`;
-    const px=q.pier+P/2;DOCKS.push({no:no0+i+1,j:o.j,door:rot(o,px,bd*.55),apron:rot(o,px,bd+APR/2),edge:rot(o,px,G.d+.6)});
+    const cx=q.bay+bw/2,sc=id&&id.i==i,no=o.no0+i+1;
+    if(q.dp)h+=`<rect class="ped" x="${q.pier}" y="0" width="${P}" height="${bd}"/><line class="fence" x1="${q.pier}" y1=".12" x2="${q.pier+P}" y2=".12"/>`;
+    h+=`<rect class="bay" x="${q.bay+.06}" y="0" width="${bw-.12}" height="${bd}"/>`;
+    h+=`<rect x="${cx-.8}" y="${bd+.35}" width="1.6" height=".28" fill="${col}"/><rect class="chg" x="${q.pier>q.bay?q.bay+.12:q.bay+bw-.57}" y="${bd+.3}" width=".45" height=".45"/><text class="no" x="${cx}" y="${bd+1.55}">${no}</text>`;
+    if(sc){h+=`<rect id="kid-${id.k}" class="kid" x="${q.pier+P/2-.35}" y="${bd*.55-.35}" width=".7" height=".7"/><line id="gate-${id.k}" class="gate" x1="${q.pier}" y1="${bd}" x2="${q.pier+P}" y2="${bd}"/>`;
+      SCN[id.k]={o,cx,cy:.5+v.L/2,kidY:bd*.55,d}}
+    else h+=carTop(cx,v.L,v.W);
+    h+=`<line ${sc?`id="bar-${id.k}" `:''}class="barrier" x1="${q.bay+.1}" y1="${bd}" x2="${q.bay+bw-.1}" y2="${bd}"/><rect class="hit" data-no="${no}" x="${Math.min(q.bay,q.pier)}" y="0" width="${bw+P}" height="${d}" fill="transparent"/>`;
   });
   return `<g transform="translate(${o.x} ${o.y}) rotate(${o.a})">${h}</g>`;
 }
 
 function render(){
-  stopScene();SCN={};DOCKS=[];
-  const G=geo(S),{v,R,m,d,Gw,HZ,s,teeth,W,Hs,yi0,yb,PB,sy,sb}=G;
-  const cl=B+R/2,cr=W-B-R/2,ct=B+R/2,ly=sy+ST*.25,T=v.turn;
-  let g='',no=0;
-  // 대지 · 거리 · 하단 보행 띠
+  stopScene();SCN={};
+  const G=geo(S),{v,R,m,d,Gw,HZ,teeth,W,Hs,yi0,yb,PB,sy,sb,core}=G;
+  const cl=B+R/2,cr=W-B-R/2,ct=B+R/2,ly=sy+ST*.25,T=v.turn,gx=core.gx,px0=B+R,pw=W-2*B-2*R;
+  let g='';
+  // 바닥: 대지 · 인도 · 거리 · 횡단보도 · 하단 광장
   g+=`<rect class="lot" x="0" y="0" width="${W}" height="${PB}"/>`;
-  g+=`<rect class="walk" x="-10" y="${PB}" width="${W+20}" height="${WALK}"/><rect class="asph" x="-10" y="${sy}" width="${W+20}" height="${ST}"/>`;
+  g+=`<rect class="ped" x="-10" y="${PB}" width="${W+20}" height="${WALK}"/><rect class="road-f" x="-10" y="${sy}" width="${W+20}" height="${ST}"/>`;
   g+=`<line class="cline" x1="-10" y1="${sy+ST/2}" x2="${W+10}" y2="${sy+ST/2}"/>`;
-  for(let x=8;x<W;x+=16)g+=arw(x,ly,180)+arw(x+8,sy+ST*.75,0);
-  g+=`<rect class="plaza" x="${B+R}" y="${yb}" width="${W-2*B-2*R}" height="${HZ}"/>`;
-  // 도로: ㄷ자 + 포켓 사이 U턴 골목
+  for(let y=sy+.5;y<sb-.3;y+=.9)g+=`<rect class="zebra" x="${gx-2}" y="${y}" width="4" height=".45"/>`;
+  for(let x=8;x<W;x+=16){if(Math.abs(x-gx)>6)g+=arw(x,ly,180);if(Math.abs(x+8-gx)>6)g+=arw(x+8,sy+ST*.75,0)}
+  g+=`<rect class="ped" x="${px0}" y="${yb}" width="${pw}" height="${HZ}"/>`;
+  // 도로: ㄷ자 + 포켓 사이 U턴 차로
   const hp=[];let body='',byp='';
   teeth.forEach((q,j)=>{if(j<m-1){const gx0=q.x0+2*d+q.Wy,hd=gx0+R/2,hu=gx0+Gw-R/2;hp.push({gx0,hd,hu});
     body+=` H${hd} V${yb} A${T} ${T} 0 0 0 ${hu} ${yb} V${ct}`;byp+=` M${hd} ${ct} H${hu}`}});
@@ -306,49 +330,53 @@ function render(){
   for(let y=yb-4;y>yi0;y-=12)g+=arw(cl,y,-90);
   for(let x=B+R+d+4;x<W-B-R-d;x+=12)g+=arw(x,ct,0);
   for(let y=yi0+4;y<yb;y+=12)g+=arw(cr,y,90);
-  g+=`<text class="inout" x="${cl}" y="${PB-2.5}">IN</text><text class="inout" x="${cr}" y="${PB-2.5}">OUT</text>`;
-  // 포켓(이빨)마다: 모서리 식재 · 마당 · 도크 3면
+  g+=`<text class="t-road" x="${cl}" y="${PB-2}">IN</text><text class="t-road" x="${cr}" y="${PB-2}">OUT</text>`;
+  // 포켓마다: 모서리 식재 · 마당 · 도크 3면
   const Z=m==1?null:m==2?['MAKE','EXPLORE']:['MAKE','QUIET','EXPLORE'];
   teeth.forEach((q,j)=>{
-    const {x0,t,Wy}=q,last=j==m-1,yx=x0+d;
-    for(const x of [x0,x0+d+Wy])g+=`<rect class="plant" x="${x}" y="${B+R}" width="${d}" height="${d}"/>`+tree(x+d/2,B+R+d/2,Math.min(2.2,d/3));
+    const {x0,Wy}=q,yx=x0+d;
+    for(const x of [x0,x0+d+Wy])g+=`<rect class="plant" x="${x+.3}" y="${B+R+.3}" width="${d-.6}" height="${d-.6}"/>`+tree(x+d/2,B+R+d/2,Math.min(2.2,d/3));
     g+=`<rect class="yard" x="${yx}" y="${yi0}" width="${Wy}" height="${Hs}"/>`;
     const tr=Math.min(3,1+Wy*.05);
-    (m==1?[[.12,.3],[.2,.78],[.5,.52],[.78,.25],[.88,.72],[.36,.15],[.64,.85]]:[[.2,.3],[.8,.72],[.78,.22]]).forEach(([a,b])=>g+=tree(yx+Wy*a,yi0+Hs*b,tr));
-    [[.3,.45],[.36,.55],[.28,.62],[.62,.42],[.58,.6],[.46,.7]].forEach(([a,b])=>g+=`<rect class="kid" x="${yx+Wy*a-.4}" y="${yi0+Hs*b-.4}" width=".8" height=".8"/>`);
-    if(Z){g+=`<text class="t-md" fill="${ZC[Z[j]]}" x="${yx+Wy/2}" y="${yi0+Hs/2}">${Z[j]} YARD</text>`}
+    (m==1?[[.12,.32],[.2,.8],[.5,.55],[.8,.3],[.88,.74],[.38,.2],[.64,.84]]:[[.2,.32],[.8,.72],[.78,.24]]).forEach(([a,b])=>g+=tree(yx+Wy*a,yi0+Hs*b,tr));
+    [[.3,.45],[.36,.55],[.28,.62],[.62,.42],[.58,.6],[.46,.7]].forEach(([a,b])=>g+=`<rect class="kid" x="${yx+Wy*a-.35}" y="${yi0+Hs*b-.35}" width=".7" height=".7"/>`);
+    if(Z){g+=tag(yx+1.2,yi0+2.6,ZC[Z[j]],`${Z[j]} YARD`)+`<text class="t-note" x="${yx+2.4}" y="${yi0+3.9}" text-anchor="start">${fmt(Wy*Hs)} ㎡</text>`}
     else{
-      g+=`<text class="t-lg" x="${yx+Wy/2}" y="${yi0+Hs/2-1}">INNER CARE YARD</text><text class="t-sm" x="${yx+Wy/2}" y="${yi0+Hs/2+1.6}">아이와 스태프 전용</text>`;
-      g+=`<text class="zone" fill="${ZC.MAKE}" x="${yx+1.2}" y="${yi0+2.4}" text-anchor="start">MAKE</text><text class="zone" fill="${ZC.QUIET}" x="${yx+Wy/2}" y="${yi0+2.4}">QUIET</text><text class="zone" fill="${ZC.EXPLORE}" x="${yx+Wy-1.2}" y="${yi0+2.4}" text-anchor="end">EXPLORE</text>`;
+      g+=`<text class="t-lg" x="${yx+Wy/2}" y="${yi0+Hs/2-.6}">INNER CARE YARD</text><text class="t-sub" x="${yx+Wy/2}" y="${yi0+Hs/2+1.3}">아이와 스태프 전용 · ${fmt(G.yard)} ㎡</text>`;
+      g+=tag(yx+1.2,yi0+2.6,ZC.MAKE,'MAKE')+tag(yx+Wy/2-2.4,yi0+2.6,ZC.QUIET,'QUIET')+tag(yx+Wy-8.4,yi0+2.6,ZC.EXPLORE,'EXPLORE');
     }
-    const zf=f=>Z?Z[j]:f;
-    [{x:x0,y:yb,a:-90,c:s,z:zf('MAKE'),j},{x:yx,y:B+R,a:0,c:t,z:zf('QUIET'),j},{x:yx+Wy+d,y:yi0,a:90,c:s,z:zf('EXPLORE'),j}].forEach((o,ri)=>{
-      const id=last&&ri==1?{i:Math.floor(t/2),k:'a'}:last&&ri==2?{i:Math.min(1,s-1),k:'d'}:null;
-      g+=row(o,G,no,id);no+=o.c;
-    });
   });
-  // 인계 게이트 · 서비스 코어 (가운데 포켓 아래)
-  const tm=teeth[Math.floor(m/2)],tw=2*d+tm.Wy,gx=tm.x0+tw/2,cw=Math.min(20,tw/2-4),cy=yb+1.5,ch=HZ-6,px0=B+R,pw=W-2*B-2*R;
-  g+=`<rect class="core" x="${gx+3}" y="${cy}" width="${cw}" height="${ch}"/><text class="t-md" x="${gx+4.2}" y="${cy+2.6}" text-anchor="start">SERVICE CORE</text>`;
-  ['체크인, 인계','스태프, 응급, 화장실','보관, 세척, 충전 관제'].forEach((l,i)=>g+=`<text class="t-xs" x="${gx+4.2}" y="${cy+4.8+i*1.7}" text-anchor="start">${l}</text>`);
+  G.rows.forEach(o=>{
+    const last=o.j==m-1,col=ZC[Z?Z[o.j]:['MAKE','QUIET','EXPLORE'][o.f]];
+    const id=last&&o.f==1?{i:Math.floor(o.c/2),k:'a'}:last&&o.f==2?{i:Math.min(1,o.c-1),k:'d'}:null;
+    g+=row(o,G,col,id);
+  });
+  // 하단 광장: 서비스 코어 · 보호자 라운지 · 인계 게이트
+  g+=`<rect class="core" data-no="core" x="${core.x}" y="${core.y}" width="${core.w}" height="${core.h}"/>`;
+  g+=`<text class="t-core" x="${core.x+1.2}" y="${core.y+2.2}" text-anchor="start">SERVICE CORE</text>`;
+  ['체크인, 인계','스태프, 응급, 화장실','보관, 세척, 충전 관제'].forEach((l,i)=>g+=`<text class="t-core2" x="${core.x+1.2}" y="${core.y+3.9+i*1.4}" text-anchor="start">${l}</text>`);
+  const lx0=gx-3-core.w;
+  g+=`<rect class="lounge" x="${lx0}" y="${core.y}" width="${core.w}" height="${core.h}"/>`;
+  for(let i=0;i<3;i++)g+=`<rect class="bench" x="${lx0+1.2+i*2.2}" y="${core.y+core.h-2.2}" width="1.4" height=".45"/>`;
+  g+=tree(lx0+core.w-2.4,core.y+core.h-2.6,1.6);
+  g+=tag(lx0+1.2,core.y+2.2,'#1B2A5E','PARENT LOUNGE','t-lounge')+`<text class="t-note" x="${lx0+2.4}" y="${core.y+3.5}" text-anchor="start">체험 끝날 때까지 보호자 대기</text>`;
   g+=`<path class="fence" d="M${px0} ${yb} V${PB} H${gx-2.2} M${gx+2.2} ${PB} H${W-B-R} V${yb}"/>`;
-  g+=`<rect x="${gx-2.2}" y="${PB-.4}" width="4.4" height=".8" fill="#FF1F78"/><text class="t-md" x="${gx}" y="${PB+2.1}">HANDOFF GATE</text>`;
-  g+=`<path class="walkline" d="M${gx} ${sy-.6} V${yb-3}" marker-end="url(#ah)"/>`;
-  if(m>1){const yw=PB-2.2,xs=teeth.map(q=>q.x0+d+q.Wy/2);
-    g+=`<path class="walkline" d="M${xs[0]} ${yb-3} V${yw} H${xs[m-1]} V${yb-3}${m==3?` M${xs[1]} ${yw} V${yb-3}`:''}"/>`;
-    g+=`<text class="t-kid" x="${xs[0]+1}" y="${yw-.8}" text-anchor="start">포켓 간 보행로, 차도 횡단 없음</text>`;
-  }else g+=`<text class="t-kid" x="${gx+1}" y="${yb-5}" text-anchor="start">보행 동선, 차도 횡단 없음</text>`;
+  g+=`<rect x="${gx-2.2}" y="${PB-.3}" width="4.4" height=".6" fill="#FF1F78"/><text class="t-gate" x="${gx}" y="${PB+1.9}">HANDOFF GATE</text>`;
+  g+=`<text class="t-note" x="${gx+2.6}" y="${sy+ST/2+.35}" text-anchor="start">횡단보도</text>`;
+  g+=`<path class="walkline" d="M${gx} ${sb-.5} V${yb-2.5}"/>`;
+  if(m>1){const xs=teeth.map(q=>q.x0+d+q.Wy/2);
+    g+=`<path class="walkline" d="M${xs[0]} ${yb-2.5} V${G.yw} H${xs[m-1]} V${yb-2.5}${m==3?` M${xs[1]} ${G.yw} V${yb-2.5}`:''}"/>`}
   // 치수 · 축척 · 방위
-  g+=`<path class="dim" d="M0 -3 H${W} M0 -4 V-2 M${W} -4 V-2"/><text class="t-dim" x="${W/2}" y="-4">${W.toFixed(1)} m</text>`;
-  g+=`<path class="dim" d="M-3 0 V${PB} M-4 0 H-2 M-4 ${PB} H-2"/><text class="t-dim" transform="translate(-4 ${PB/2}) rotate(-90)">${PB.toFixed(1)} m</text>`;
-  g+=`<rect x="0" y="${sb+2.5}" width="10" height="1" fill="#1B2A5E"/><rect x="10" y="${sb+2.5}" width="10" height="1" fill="#F7F7F9" stroke="#1B2A5E" stroke-width=".15"/>`;
-  g+=`<text class="t-dim" x="0" y="${sb+6}">0</text><text class="t-dim" x="10" y="${sb+6}">10</text><text class="t-dim" x="20" y="${sb+6}">20 m</text>`;
+  g+=`<path class="dim" d="M0 -3 H${W} M0 -3.8 V-2.2 M${W} -3.8 V-2.2"/><text class="t-dim" x="${W/2}" y="-4">${W.toFixed(1)} m</text>`;
+  g+=`<path class="dim" d="M-3 0 V${PB} M-3.8 0 H-2.2 M-3.8 ${PB} H-2.2"/><text class="t-dim" transform="translate(-4 ${PB/2}) rotate(-90)">${PB.toFixed(1)} m</text>`;
+  g+=`<rect x="0" y="${sb+2.5}" width="10" height=".6" fill="#1B2A5E"/><rect x="10" y="${sb+2.5}" width="10" height=".6" fill="#C9D0DA"/>`;
+  g+=`<text class="t-dim" x="0" y="${sb+4.8}">0</text><text class="t-dim" x="10" y="${sb+4.8}">10</text><text class="t-dim" x="20" y="${sb+4.8}">20 m</text>`;
   g+=`<g transform="translate(${W-2} ${sb+4})"><path d="M0 -2.2 L1 1.2 L0 .5 L-1 1.2Z" fill="#1B2A5E"/><text class="t-dim" x="0" y="-2.8">N</text></g>`;
-  // 배경 흐름 차량 (포켓 골목까지 전부 도는 경로)
+  // 배경 흐름 차량 (포켓 차로까지 도는 경로)
   const amb=`M${W+14} ${ly} H${cl} V${ct}${body} H${cr} V${ly} H-14`;
   const ambLen=(W+14-cl)+(ly-ct)*2+(cr-cl)+hp.length*(2*(yb-ct)+Math.PI*T)+cr+14,dur=(ambLen/9).toFixed(1);
-  for(let i=0;i<3;i++)g+=`<g class="mv">${carMv('',v.L,v.W).replace(' id=""','')}<animateMotion dur="${dur}s" begin="-${(dur*i/3).toFixed(1)}s" repeatCount="indefinite" rotate="auto" path="${amb}"/></g>`;
-  // 출차 장면용: 바깥 ㄷ자 급행 경로 · 대기선 · 스캔 · 차량 A/D/B
+  for(let i=0;i<3;i++)g+=`<g class="mv">${carMv('',v.L,v.W)}<animateMotion dur="${dur}s" begin="-${(dur*i/3).toFixed(1)}s" repeatCount="indefinite" rotate="auto" path="${amb}"/></g>`;
+  // 출차 장면용: 바깥 ㄷ자 경로 · 대기선 · 스캔 · 차량 A/D/B
   g+=`<path id="xp" fill="none" d="M${W+14} ${ly} H${cl+RC} Q${cl} ${ly} ${cl} ${ly-RC} V${ct+RC} Q${cl} ${ct} ${cl+RC} ${ct} H${cr-RC} Q${cr} ${ct} ${cr} ${ct+RC} V${ly-RC} Q${cr} ${ly} ${cr-RC} ${ly} H-14"/>`;
   g+=`<line id="hold-b" class="hold"/><line id="hold-d" class="hold"/><circle id="scan-a" class="scan" r="0"/><circle id="scan-d" class="scan" r="0"/>`;
   g+=`<g id="wlayer"></g>`+carMv('car-a',v.L,v.W)+carMv('car-d',v.L,v.W)+carMv('car-b',v.L,v.W);
@@ -356,41 +384,42 @@ function render(){
 
   const svg=$('plan');FULL=[-8,-8,W+14,sb+16];
   svg.setAttribute('viewBox',FULL.join(' '));
-  svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1B2A5E"/></marker></defs>`+g;
+  svg.innerHTML=g;
   resetScene();applyAnim();CUR=G;
   if(!(WK.a<=G.n))WK={a:4,b:null};if(WK.b==null||WK.b>G.n)WK.b=G.n-5;walk();
 
   // 숫자 · 점검 · 비교표
   const cd=coreDist(G);
   $('kpis').innerHTML=[[S.n,'대','Docks'],[fmt(G.yard/m),'㎡',m>1?`Yard × ${m}`:'Yard'],[fmt(cd.max),'m','Max to core'],[fmt(G.area),'㎡','Site']].map(([n,u,l])=>`<div class="kpi"><b>${n}<small>${u}</small></b><span class="lbl">${l}</span></div>`).join('');
-  $('nO').textContent=`${S.n}대`;$('rO').textContent=`${R.toFixed(1)} m`;
+  $('nO').textContent=`${S.n}대`;$('gpO').textContent=`${S.gap.toFixed(1)} m`;$('rO').textContent=`${R.toFixed(1)} m`;
   $('stats').innerHTML=[
     ['부지 (가로 × 세로)',`${W.toFixed(1)} × ${PB.toFixed(1)} m`],
     ['부지 면적',`${fmt(G.area)} ㎡ (${fmt(G.area/3.3058)}평)`],
     ['1대당 면적',`${fmt(G.area/G.n)} ㎡`],
     ['보행 마당 합계',`${fmt(G.yard)} ㎡`],
     [m>1?`포켓 1개 (× ${m})`:'마당 크기',`${fmt(G.yard/m)} ㎡`],
-    ['크기 감각',feel(G.yard/m)],
-    ['코어까지 도보 최대 · 평균',`${fmt(cd.max)} · ${fmt(cd.avg)} m`],
-    ['아이 도보 시간 (1 m/s)',`최대 ${fmt(cd.max)}초`],
+    ['크기 비교',feel(G.yard/m)],
+    ['차량 → 코어 도보 최대',`${fmt(cd.max)} m, ${walkTime(cd.max)}`],
+    ['차량 → 코어 도보 평균',`${fmt(cd.avg)} m, ${walkTime(cd.avg)}`],
     ['옆 차와 간격',G.gap.map(x=>x.toFixed(1)).join(' / ')+' m'],
     ['도크 1칸',`${G.bw} × ${v.bd} m`],
   ].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
   const c=[
     [R>=6,R>=6?`도로 폭 ${R} m, 후진 출차 가능 (직각주차 차로 기준 6.0 m 이상)`:`도로 폭 ${R} m, 후진 출차에는 6.0 m 이상 필요`],
     [!S.share||v.both,!S.share?`옆 차와 간격 ${G.gap[0].toFixed(1)} m, 부두 쪽 승하차 여유 충분`:v.both?'2대 1부두 가능, PV5 패신저 양쪽 슬라이딩 도어 기본':'2대 1부두 확인 필요, PV7 도어 구성 미공개'],
+    [P>=1.2,P>=1.2?`부두 폭 ${P.toFixed(1)} m, 보호자와 아이가 나란히 걸을 수 있음`:`부두 폭 ${P.toFixed(1)} m, 한 줄로만 걸을 수 있음 (1.2 m 이상 권장)`],
     [true,m>1?`포켓 사이 U턴 차로 폭 ${Gw.toFixed(1)} m (회전반경 ${T} m 기준)`:'한 마당 구성, U턴 차로 없음'],
-    [true,'보행자 차도 횡단 0회, 진입과 퇴장 모두 우회전'],
+    [true,'단지 안 보행자 차도 횡단 0회. 길 건너편 보호자는 게이트 앞 횡단보도 이용'],
   ];
   $('checks').innerHTML=c.map(([ok,t])=>`<li><i class="pxl ${ok?'ok':'warn'}" aria-label="${ok?'OK':'확인 필요'}"></i><span>${t}</span></li>`).join('');
   table();
 }
 
 function table(){
-  let i=0,h=`<thead><tr><th>안</th><th>마당</th><th>부두</th><th class="n">부지</th><th class="n">면적</th><th class="n">1대당</th><th class="n">마당 합</th><th class="n">마당 1개</th><th>크기 감각</th><th class="n">코어까지 최대</th><th class="n">옆차 간격</th></tr></thead><tbody>`;
+  let i=0,h=`<thead><tr><th>안</th><th>마당</th><th>부두</th><th class="n">부지</th><th class="n">면적</th><th class="n">1대당</th><th class="n">마당 1개</th><th>크기 비교</th><th class="n">코어까지 최대</th><th class="n">옆차 간격</th></tr></thead><tbody>`;
   for(const m of [1,2,3])for(const sh of [false,true]){
-    const G=geo({...S,m,share:sh}),cur=m==S.m&&sh==S.share;
-    h+=`<tr class="${cur?'cur':''}" data-m="${m}" data-s="${+sh}" tabindex="0"><td>${'ABCDEF'[i++]}</td><td>${m==1?'한 마당':m+' 포켓'}</td><td>${sh?'2대 1부두':'1대 1부두'}</td><td class="n">${G.W.toFixed(0)} × ${G.PB.toFixed(0)} m</td><td class="n">${fmt(G.area)} ㎡</td><td class="n">${fmt(G.area/G.n)} ㎡</td><td class="n">${fmt(G.yard)} ㎡</td><td class="n">${fmt(G.yard/m)} ㎡</td><td>${feel(G.yard/m)}</td><td class="n">${fmt(coreDist(G).max)} m</td><td class="n">${G.gap.map(x=>x.toFixed(1)).join(' / ')} m</td></tr>`;
+    const G=geo({...S,m,share:sh}),cur=m==S.m&&sh==S.share,cd=coreDist(G);
+    h+=`<tr class="${cur?'cur':''}" data-m="${m}" data-s="${+sh}" tabindex="0"><td>${'ABCDEF'[i++]}</td><td>${m==1?'한 마당':m+' 포켓'}</td><td>${sh?'2대 1부두':'1대 1부두'}</td><td class="n">${G.W.toFixed(0)} × ${G.PB.toFixed(0)} m</td><td class="n">${fmt(G.area)} ㎡</td><td class="n">${fmt(G.area/G.n)} ㎡</td><td class="n">${fmt(G.yard/m)} ㎡${m>1?` × ${m}`:''}</td><td>${feel(G.yard/m)}</td><td class="n">${fmt(cd.max)} m, ${walkTime(cd.max)}</td><td class="n">${G.gap.map(x=>x.toFixed(1)).join(' / ')} m</td></tr>`;
   }
   $('cmp').innerHTML=h+'</tbody>';
 }
@@ -420,7 +449,7 @@ function resetScene(){
   if(!SCN.a)return;
   parked('a');parked('d');pose('b',0,0,0,false);
   ['hold-b','hold-d'].forEach(i=>$(i).style.display='none');
-  ['a','d'].forEach(k=>{$('scan-'+k).setAttribute('r',0);$('gate-'+k).classList.remove('on');$('bar-'+k).classList.remove('on');$('kid-'+k).setAttribute('y',SCN[k].kidY-.4)});
+  ['a','d'].forEach(k=>{$('scan-'+k).setAttribute('r',0);$('gate-'+k).classList.remove('on');$('bar-'+k).classList.remove('on');$('kid-'+k).setAttribute('y',SCN[k].kidY-.35)});
   $('plan').setAttribute('viewBox',FULL.join(' '));
 }
 function stopScene(){cancelAnimationFrame(raf);raf=0;$('play').textContent='출차 장면 재생'}
@@ -454,20 +483,18 @@ function play(){
     const t=(now-t0)/1000;
     const c=CAP.findLastIndex(q=>t>=q[0]);if(c!=ci){ci=c;$('cap').textContent=CAP[c][1]}
     ['a','d'].forEach(k=>{const s=SCN[k];
-      $('kid-'+k).setAttribute('y',s.kidY-.4+(s.d+1.5-s.kidY)*ease(clamp(t/1.6,0,1)));
+      $('kid-'+k).setAttribute('y',s.kidY-.35+(s.d+1.5-s.kidY)*ease(clamp(t/1.6,0,1)));
       const closed=t>=2&&!(k=='a'&&t>=14);$('gate-'+k).classList.toggle('on',closed);$('bar-'+k).classList.toggle('on',closed);
       const sc=$('scan-'+k),u=t>=3.2&&t<4.8?((t-3.2)/.8)%1:0,[X,Y]=rot(s.o,s.cx,s.cy);
       sc.setAttribute('cx',X);sc.setAttribute('cy',Y);sc.setAttribute('r',u?1+u*5:0);sc.style.opacity=1-u;
     });
     setLine('hold-b',t>=3.2&&t<9.2&&xp,LA-9,R);setLine('hold-d',t>=3.2&&t<8.6&&xp,LD-9,R);
-    // A · D: 후진 → 정지 → 전진
     [['a',A,LA],['d',D,LD]].forEach(([k,s,L0])=>{
       if(t<4.8)parked(k);
       else if(t<8)localPose(k,s,revPts(s),ease((t-4.8)/3.2),true);
       else if(t<8.6)localPose(k,s,revPts(s),1,false);
       else{const l=L0+V*(t-8.6);l<Lt-1?at(k,l):pose(k,0,0,0,false)}
     });
-    // B: 진입 → 대기 → 빈 도크로
     if(t<9.2)at('b',Math.min(LAh,LB0+V*t));
     else if(t<11.2)at('b',LAh+(LA-LAh)*ease((t-9.2)/2));
     else localPose('b',A,dockB,ease(clamp((t-11.2)/2.2,0,1)),false);
@@ -480,35 +507,35 @@ function play(){
   raf=requestAnimationFrame(tick);
 }
 
-// ── 도크 간 도보: 부두 → 에이프런 → 마당 가로지름 (다른 포켓이면 하단 보행로 경유) ──
-function walkPath(A,Bd){
-  const yw=CUR.PB-2.2,p=[A.door,A.apron,A.edge];
-  if(A.j!=Bd.j)p.push([A.edge[0],yw],[Bd.edge[0],yw]);
-  return [...p,Bd.edge,Bd.apron,Bd.door];
-}
+// ── 도보 시뮬: 출발 도크 → 도착 도크 또는 서비스 코어 ──
 function walk(){
   cancelAnimationFrame(wraf);
-  const A=DOCKS.find(d=>d.no==WK.a),Bd=DOCKS.find(d=>d.no==WK.b);
-  const pin=(d,t)=>`<g transform="translate(${d.door[0]} ${d.door[1]})"><rect x="-.6" y="-.6" width="1.2" height="1.2" fill="#FF1F78"/><text class="pin" y="-1.1">${t}</text></g>`;
-  if(!A||!Bd){$('wlayer').innerHTML=A?pin(A,`${A.no} 출발`):'';
-    $('wstat').innerHTML=`<dt>출발</dt><dd>${A?A.no+'번':'미지정'}</dd><dt>도착</dt><dd>도크를 한 번 더 누르기</dd>`;return}
-  const pts=walkPath(A,Bd),seg=pts.slice(1).map((q,i)=>Math.hypot(q[0]-pts[i][0],q[1]-pts[i][1])),L=seg.reduce((a,b)=>a+b,0);
-  $('wlayer').innerHTML=`<polyline class="wpath" points="${pts.map(p=>p.join(',')).join(' ')}"/>`+pin(A,`${A.no} 출발`)+pin(Bd,`${Bd.no} 도착`)+`<rect id="wkid" class="wkid" width="1" height="1"/>`;
-  const sec=L/STEP/CAD,mmss=sec<60?`${Math.round(sec)}초`:`${Math.floor(sec/60)}분 ${Math.round(sec%60)}초`;
-  $('wstat').innerHTML=[['구간',`${A.no}번 → ${Bd.no}번`],['경로',A.j==Bd.j?'마당 가로질러 이동':'하단 보행로 경유'],['거리',`${L.toFixed(1)} m`],['걸음 수',`${Math.round(L/STEP)}걸음`],['걸리는 시간',mmss]].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+  const G=CUR,A=G.docks.find(d=>d.no==WK.a),T=WK.b=='core'?'core':G.docks.find(d=>d.no==WK.b);
+  const pin=([x,y],t)=>`<g transform="translate(${x} ${y})"><rect x="-.6" y="-.6" width="1.2" height="1.2" fill="#FF1F78"/><text class="pin" y="-1.1">${t}</text></g>`;
+  const Lc=plen(walkPath(G,A,'core')),toCore=['출발 도크 → 서비스 코어',`${Lc.toFixed(1)} m, ${Math.round(Lc/STEP)}걸음, ${walkTime(Lc)}`];
+  const dl=r=>r.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+  if(!T){$('wlayer').innerHTML=pin(A.door,`${A.no} 출발`);$('wstat').innerHTML=dl([['출발',`${A.no}번`],['도착','도크나 서비스 코어 누르기'],toCore]);return}
+  const pts=walkPath(G,A,T),seg=pts.slice(1).map((q,i)=>Math.hypot(q[0]-pts[i][0],q[1]-pts[i][1])),L=seg.reduce((a,b)=>a+b,0);
+  const toC=T=='core',same=toC?A.j==G.core.jc:A.j==T.j;
+  $('wlayer').innerHTML=`<polyline class="wpath" points="${pts.map(p=>p.join(',')).join(' ')}"/>`+pin(A.door,`${A.no} 출발`)+pin(toC?G.core.door:T.door,toC?'코어 도착':`${T.no} 도착`)+`<rect id="wkid" class="wkid" width=".9" height=".9"/>`;
+  const km=seg.indexOf(Math.max(...seg)),mx=(pts[km][0]+pts[km+1][0])/2,my=(pts[km][1]+pts[km+1][1])/2,lt=`${walkTime(L)} · ${Math.round(L)} m`,lw=lt.length*.72+1.8;
+  $('wlayer').insertAdjacentHTML('beforeend',`<g transform="translate(${mx} ${my})"><rect x="${-lw/2}" y="-1.25" width="${lw}" height="2.3" rx="1.15" fill="#FF1F78"/><text class="wtime" y=".45">${lt}</text></g>`);
+  $('wstat').innerHTML=dl([['구간',`${A.no}번 → ${toC?'서비스 코어':T.no+'번'}`],['경로',same?'마당 가로질러 이동':'하단 보행로 경유'],['거리',`${L.toFixed(1)} m`],['걸음 수',`${Math.round(L/STEP)}걸음`],['걸리는 시간',walkTime(L)],...(toC?[]:[toCore])]);
   const el=$('wkid'),t0=performance.now();
   const tick=now=>{
     let d=Math.min(L,(now-t0)/1000*STEP*CAD*4),k=0;
     while(k<seg.length-1&&d>seg[k]){d-=seg[k];k++}
     const u=seg[k]?Math.min(1,d/seg[k]):1,p=pts[k],q=pts[k+1];
-    el.setAttribute('x',p[0]+(q[0]-p[0])*u-.5);el.setAttribute('y',p[1]+(q[1]-p[1])*u-.5);
+    el.setAttribute('x',p[0]+(q[0]-p[0])*u-.45);el.setAttribute('y',p[1]+(q[1]-p[1])*u-.45);
     if((now-t0)/1000*STEP*CAD*4<L)wraf=requestAnimationFrame(tick);
   };
   wraf=requestAnimationFrame(tick);
 }
 $('plan').addEventListener('click',e=>{
-  const h=e.target.closest('[data-no]');if(!h)return;const n=+h.dataset.no;
-  if(WK.b!=null)WK={a:n,b:null};else if(n!=WK.a)WK.b=n;
+  const h=e.target.closest('[data-no]');if(!h)return;const n=h.dataset.no;
+  if(n=='core')WK.b='core';
+  else if(WK.b!=null)WK={a:+n,b:null};
+  else if(+n!=WK.a)WK.b=+n;
   walk();
 });
 
@@ -519,6 +546,7 @@ document.querySelectorAll('input[name=m]').forEach(el=>el.onchange=()=>{S.m=+el.
 document.querySelectorAll('input[name=sh]').forEach(el=>el.onchange=()=>{S.share=el.value=='1';render()});
 $('n').oninput=e=>{S.n=+e.target.value;render()};
 $('r').oninput=e=>{S.R=+e.target.value;render()};
+$('gp').oninput=e=>{S.gap=+e.target.value;render()};
 $('anim').onchange=()=>{if(!raf)applyAnim()};
 $('play').onclick=play;
 const pick=tr=>{S.m=+tr.dataset.m;S.share=tr.dataset.s=='1';$('m'+S.m).checked=true;$('sh'+(+S.share)).checked=true;render()};
@@ -528,54 +556,59 @@ render();
 </script>
 
 <style>
-/* 도면 시트: AFTERSPACE 톤 (쿨 그레이 · 남색 · 카테고리색) 고정 */
+/* 도면 시트: 면 위주 (흰색 = 사람, 회색 = 차, 초록 = 마당, 남색 = 코어) */
 #plan{text-anchor:middle;fill:#22222A;letter-spacing:0} /* 상속으로 두어야 text-anchor·fill 속성이 먹음 */
-#plan text{font-family:"42dot Sans","Pretendard",sans-serif;text-rendering:geometricPrecision} /* 1px대 글자 힌팅으로 자간 뭉개짐 방지 */
-#plan .lot{fill:#EDEFF3}
-#plan .walk{fill:#DDE1E8}
-#plan .asph{fill:#2F3547}
-#plan .road{fill:none;stroke:#2F3547;stroke-linejoin:round}
-#plan .cline{stroke:#F2C94C;stroke-width:.2;stroke-dasharray:2 1.5}
-#plan .arw{fill:none;stroke:#fff;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
-#plan .inout{font-size:1.5px;font-weight:800;fill:#fff}
-#plan .bay{fill:#3B4256}
-#plan .bayline{stroke:#fff;stroke-width:.12}
-#plan .pier{fill:#E2E5EB}
-#plan .plant{fill:#D3E0D0}
-#plan .tree{fill:#BCD2B8;stroke:#9DB89A;stroke-width:.15}
-#plan .yard{fill:#DEE9DB}
-#plan .plaza{fill:#E6E9EF}
-#plan .core{fill:#fff;stroke:#1B2A5E;stroke-width:.25}
-#plan .car{fill:#FFFFFF;stroke:#8A93A8;stroke-width:.1}
-#plan .glass{fill:#22222A}
+#plan text{font-family:"42dot Sans","Pretendard",sans-serif;text-rendering:geometricPrecision}
+#plan .lot{fill:#E3E8EE}
+#plan .ped{fill:#FFFFFF}
+#plan .road-f{fill:#D5DBE3}
+#plan .road{fill:none;stroke:#D5DBE3;stroke-linejoin:round}
+#plan .cline{stroke:#FFFFFF;stroke-width:.18;stroke-dasharray:2 1.5}
+#plan .zebra{fill:#FFFFFF}
+#plan .arw{fill:#FFFFFF}
+#plan .bay{fill:#C7CED9}
+#plan .plant{fill:#CFE3CF}
+#plan .tree{fill:#B7D3B9}
+#plan .tree-hi{fill:#C8DEC9}
+#plan .yard{fill:#DCEBDC}
+#plan .lounge{fill:#EEF1F5}
+#plan .bench{fill:#1B2A5E}
+#plan .core{fill:#1B2A5E;cursor:pointer}
+#plan .shd{fill:#1B2A5E;opacity:.12}
+#plan .car{fill:#FFFFFF}
+#plan .roof{fill:#EEF1F5}
+#plan .glass{fill:#22283A}
 #plan .tail{fill:#FF2D3D}
-#plan .rev .tail{fill:#fff;stroke:#FF2D3D;stroke-width:.08}
-#plan .stop{stroke:#F2C94C;stroke-width:.2}
+#plan .rev .tail{fill:#FFFFFF}
 #plan .chg{fill:#00B84A}
-#plan .no{font-size:.85px;fill:#8A93A8}
-#plan .fence{fill:none;stroke:#1B2A5E;stroke-width:.3}
-#plan .barrier{stroke:#FF1F78;stroke-width:.3;stroke-dasharray:.5 .3}
-#plan .barrier.on{stroke-width:.5;stroke-dasharray:none}
-#plan .gate{stroke:#FF1F78;stroke-width:.5;opacity:0}
+#plan .fence{fill:none;stroke:#1B2A5E;stroke-width:.18;opacity:.55}
+#plan .barrier{stroke:#FF1F78;stroke-width:.26;opacity:.7}
+#plan .barrier.on{stroke-width:.45;opacity:1}
+#plan .gate{stroke:#FF1F78;stroke-width:.45;opacity:0}
 #plan .gate.on{opacity:1}
 #plan .hold{stroke:#FF2D3D;stroke-width:.7}
-#plan .scan{fill:none;stroke:#1B2A5E;stroke-width:.25}
-#plan .lab{font-size:1.3px;font-weight:800;fill:#FF1F78;pointer-events:none}
+#plan .scan{fill:none;stroke:#1B2A5E;stroke-width:.2}
 #plan .kid{fill:#1B2A5E}
-#plan .walkline{fill:none;stroke:#1B2A5E;stroke-width:.35;stroke-dasharray:.9 .6}
-#plan .dim{fill:none;stroke:#8A93A8;stroke-width:.1}
-#plan .t-lg{font-size:2.2px;font-weight:800;letter-spacing:.1px;fill:#1B2A5E}
-#plan .t-md{font-size:1.4px;font-weight:800}
-#plan .t-sm{font-size:1.2px;fill:#525C74}
-#plan .t-xs{font-size:1px;fill:#525C74}
-#plan .t-dim{font-size:1.1px;fill:#8A93A8}
-#plan .t-kid{font-size:1.1px;font-weight:800;fill:#1B2A5E}
-#plan .zone{font-size:1.3px;font-weight:800;letter-spacing:.1px}
+#plan .walkline{fill:none;stroke:#1B2A5E;stroke-width:.32;stroke-dasharray:.35 .6;opacity:.7}
+#plan .dim{fill:none;stroke:#A3ABBA;stroke-width:.08}
+#plan .no{font-size:.72px;font-weight:600;fill:#8A93A8}
+#plan .t-lg{font-size:2px;font-weight:800;letter-spacing:.16px;fill:#1B2A5E}
+#plan .t-sub{font-size:1px;fill:#525C74}
+#plan .zone{font-size:1.05px;font-weight:800;letter-spacing:.12px;fill:#22222A}
+#plan .t-note{font-size:.85px;fill:#525C74}
+#plan .t-core{font-size:1.15px;font-weight:800;letter-spacing:.1px;fill:#FFFFFF}
+#plan .t-core2{font-size:.88px;fill:#FFFFFF;opacity:.72}
+#plan .t-lounge{font-size:1px;font-weight:800;letter-spacing:.1px;fill:#1B2A5E}
+#plan .t-gate{font-size:1px;font-weight:800;letter-spacing:.12px;fill:#1B2A5E}
+#plan .t-road{font-size:1.1px;font-weight:800;letter-spacing:.12px;fill:#8A93A8}
+#plan .t-dim{font-size:.95px;fill:#8A93A8}
+#plan .lab{font-size:1.1px;font-weight:800;fill:#FF1F78;pointer-events:none}
 #plan.still .mv{display:none}
 #plan .hit{cursor:pointer}
-#plan .hit:hover{fill:#FF1F7826}
+#plan .hit:hover{fill:#FF1F781F}
 #plan [id^=car-],#plan .mv{pointer-events:none}
-#plan .wpath{fill:none;stroke:#FF1F78;stroke-width:.45;stroke-linejoin:round;stroke-dasharray:1 .5}
+#plan .wpath{fill:none;stroke:#FF1F78;stroke-width:.4;stroke-linejoin:round}
 #plan .wkid{fill:#FF1F78}
-#plan .pin{font-size:1.1px;font-weight:800;fill:#FF1F78}
+#plan .wtime{font-size:1.25px;font-weight:800;fill:#FFFFFF}
+#plan .pin{font-size:1px;font-weight:800;fill:#FF1F78}
 </style>
