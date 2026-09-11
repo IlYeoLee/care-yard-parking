@@ -359,7 +359,7 @@ function row(o,G,col,id){
     const cx=q.bay+bw/2,sc=id&&id.i==i,no=o.no0+i+1;
     if(q.dp)h+=`<rect class="ped" x="${q.pier}" y="0" width="${P}" height="${bd}"/><line class="fence" x1="${q.pier}" y1=".12" x2="${q.pier+P}" y2=".12"/>`;
     h+=`<rect class="bay" x="${q.bay+.06}" y="0" width="${bw-.12}" height="${bd}"/>`;
-    {const D0=.5+v.L*.36,D1=D0+1.1,ex=q.pier<q.bay?q.pier+P:q.pier;h+=`<path class="fence" d="M${ex} .1 V${D0} M${ex} ${D1} V${bd}${q.dp&&q.pier<q.bay?` M${q.pier} .1 V${bd}`:''}"/><line class="psd" x1="${ex}" y1="${D0}" x2="${ex}" y2="${D1}"/>`}
+    {const D0=.5+v.L*.45-.8,D1=D0+1.6,ex=q.pier<q.bay?q.pier+P:q.pier;h+=`<path class="fence" d="M${ex} .1 V${D0} M${ex} ${D1} V${bd}${q.dp&&q.pier<q.bay?` M${q.pier} .1 V${bd}`:''}"/><line class="psd" x1="${ex}" y1="${D0}" x2="${ex}" y2="${D1}"/>`}
     h+=`<rect class="totem-base" x="${cx-.35}" y="${d-.55}" width=".7" height=".3"/><rect x="${cx-.3}" y="${d-.52}" width=".6" height=".18" fill="${col}"/><rect class="chg" x="${q.pier>q.bay?q.bay+.12:q.bay+bw-.57}" y="${bd+.3}" width=".45" height=".45"/><text class="no" x="${cx}" y="${bd+.95}">${no}</text>`;
     if(sc){h+=`<rect id="kid-${id.k}" class="kid" x="${q.pier+P/2-.35}" y="${bd*.55-.35}" width=".7" height=".7"/><line id="gate-${id.k}" class="gate" x1="${q.pier}" y1="${bd}" x2="${q.pier+P}" y2="${bd}"/>`;
       SCN[id.k]={o,cx,cy:.5+v.L/2,kidY:bd*.55,d}}
@@ -848,12 +848,19 @@ function build3D(G){
       const ci=Math.floor(((no*2654435761)%4294967296)/4294967296*12); // 사이니지와 앞 스크린이 같은 카테고리
       if(occ.has(no))car(grp,cx,.5+v.L/2,ci);
       // 부두 난간: 차 문 쪽 가장자리는 문 자리(D0~D1)만 스크린도어, 반대쪽은 통난간. 빈 도크면 스크린도어·부두 입구가 닫힘
-      {const docked=occ.has(no),D0=.5+v.L*.36,D1=D0+1.1,ex=q.pier<q.bay?q.pier+P:q.pier,psd=mat('#1B2A5E',{transparent:true,opacity:.45,roughness:.3});
+      {const docked=occ.has(no),D0=.5+v.L*.45-.8,D1=D0+1.6,ex=q.pier<q.bay?q.pier+P:q.pier,inw=ex===q.pier?1:-1; // 문 폭 1.6 m, PV5 슬라이딩 도어 가운데
+        const steel=mat('#2E3547',{roughness:.35,metalness:.5}),glass=mat('#BFD4E6',{transparent:true,opacity:.32,roughness:.05,metalness:.1}),sig=docked?mat('#00B84A',{emissive:'#00B84A',emissiveIntensity:1.2}):mat('#FF2D3D',{emissive:'#FF2D3D',emissiveIntensity:1.2});
         const rail=(x,z0,z1)=>{if(z1-z0<.1)return;box(grp,cNavy,x-.03,z0,.06,z1-z0,.05,1.1);box(grp,cNavy,x-.02,z0,.04,z1-z0,.04,.65);for(let z=z0;z<=z1+.01;z+=Math.max(.4,(z1-z0)/Math.ceil((z1-z0)/1.2)))box(grp,cNavy,x-.03,z-.03,.06,.06,.98,.15)};
-        rail(ex,.1,D0);rail(ex,D1,bd-.05);
-        box(grp,psd,ex-.025,docked?D1+.05:D0,.05,1.1,1.25,.15); // 스크린도어: 도킹 중엔 옆으로 열림
+        const leaf=(x,z0,w)=>{box(grp,glass,x-.02,z0+.04,.04,w-.08,1.82,.24,false);box(grp,steel,x-.03,z0,.06,.05,1.9,.2);box(grp,steel,x-.03,z0+w-.05,.06,.05,1.9,.2);box(grp,steel,x-.03,z0,.06,w,.06,2.04);box(grp,steel,x-.03,z0,.06,w,.08,.2)};
+        rail(ex,.1,D0-.1);rail(ex,D1+.1,bd-.05);
+        // 스크린도어: 기둥 · 헤더 · 신호 LED(도킹 초록/비면 빨강) · 유리 문짝 2 · 노란 안전선
+        box(grp,steel,ex-.06,D0-.12,.12,.12,2.2,.15);box(grp,steel,ex-.06,D1,.12,.12,2.2,.15);box(grp,steel,ex-.08,D0-.12,.16,D1-D0+.24,.26,2.35);
+        box(grp,sig,ex-.085,D0+.1,.17,D1-D0-.2,.05,2.43,false);
+        const hw=(D1-D0)/2,off=inw*.12;
+        if(docked){leaf(ex+off,D0-hw-.05,hw);leaf(ex+off,D1+.05,hw)}else{leaf(ex,D0,hw);leaf(ex,D0+hw,hw)}
+        box(grp,mat('#FFC800',{roughness:.6}),inw>0?ex+.05:ex-.35,D0,.3,D1-D0,.012,.15,false);
         if(q.dp&&q.pier<q.bay)rail(q.pier,.1,bd-.05);
-        if(q.dp&&!docked)box(grp,psd,q.pier+.05,bd-.03,P-.1,.05,1.1,.15)} // 빈 도크: 부두 입구 문 닫힘
+        if(q.dp&&!docked){const g0=q.pier+.08,gw=P-.16;box(grp,glass,g0+.04,bd-.02,gw-.08,.04,1.05,.24,false);box(grp,steel,g0,bd-.03,.05,.06,1.15,.15);box(grp,steel,g0+gw-.05,bd-.03,.05,.06,1.15,.15);box(grp,steel,g0,bd-.03,gw,.06,.06,1.24);box(grp,sig,g0+.1,bd-.035,gw-.2,.07,.04,1.3,false)}} // 빈 도크: 부두 입구 유리문 닫힘
       box(grp,cPink,q.bay+.1,bd-.03,bw-.2,.06,1.2,.15);
       // 충전기: 짙은 몸체 + 초록 화면 + 케이블 거치대
       const chx=q.pier>q.bay?q.bay+.12:q.bay+bw-.47;box(grp,mat('#2E3547',{roughness:.4}),chx,bd+.2,.35,.25,1.35,.15);
