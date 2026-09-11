@@ -772,7 +772,7 @@ function build3D(G){
     for(const x of [q.x0,q.x0+d+Wy]){box(S3,cPlant,x+.3,B+R+.3,d-.6,d-.6,.3);tree(x+d/2,B+R+d/2,Math.min(2,d/3.2))}
     if(S.ex>0){box(S3,cPlant,q.x0,yi0,d,Hs,.25);box(S3,cPlant,yx,B+R,Wy,d,.25);box(S3,cPlant,yx+Wy,yi0,d,Hs,.25)}
     const tr=Math.min(3,1+Wy*.05);
-    [[.08,.12],[.92,.12],[.08,.88],[.92,.88],[.5,.08],[.08,.5],[.92,.5]].forEach(([a,b])=>tree(yx+Wy*a,yi0+Hs*b,tr*.85,Y));
+    [[.08,.5],[.92,.5],[.08,.88],[.92,.88],[.3,.9],[.7,.9]].forEach(([a,b])=>tree(yx+Wy*a,yi0+Hs*b,tr*.85,Y)); // 윗줄 사이니지 앞은 비움
     if(mn>=14){
       flat(S3,new T3.RingGeometry(r0,r0+1.6,64),cPath,cx,Y+.02,cz);
       const Rm=r0*.45,mound=mesh(S3,new T3.SphereGeometry(Rm,32,12,0,Math.PI*2,0,Math.PI/2),mat('#C9E0C4'),cx,Y,cz,false);mound.scale.y=.28;
@@ -904,12 +904,12 @@ function cam3(k){
   if(k=='s-front')set([mid,1.5,tz+9.5],[mid,1.25,tz],32);
   if(k=='s-row')set([xs-1.2,1.55,tz+2.6],[xe,1.15,tz-.3],42);
   if(k=='s-hero')set([tx(hi)+2.3,.85,tz+3.3],[tx(hi)-.4,1.55,tz-.6],36);
-  if(k=='s-corner'){const cx=left.x+G.d,cz=top.y+G.d;set([cx+13,4.5,cz+13],[cx+2,1,cz+2],38)}
+  if(k=='s-corner'){const cx=left.x+G.d,cz=top.y+G.d;set([cx+11,6,cz+11],[cx+1.5,1.2,cz+1.5],40)}
   if(k=='s-aerial')set([mid-7,13,tz+15],[mid-2,.4,tz-2],35);
-  if(k=='s-tele')set([mid,2,G.yb-3],[mid,1.3,tz],14);
-  if(k=='s-gate')set([gx,1.6,H+1.5],[gx,1.3,G.yi0],42);
+  if(k=='s-tele'){const ox=xs+(xe-xs)*.22;set([ox,3.2,G.yb-3],[ox+(xe-xs)*.08,1.3,tz],14)} // 가운데 놀이터를 비켜서
+  if(k=='s-gate')set([gx-7,1.8,H+8],[gx,2,H-7],36);
   // 정중앙: 부지+거리를 감싸는 구가 화면에 꽉 차게
-  const fit=(elev,azi)=>{const cx=W/2,cz=G.sb/2,r=Math.hypot(W,G.sb)/2,v=c.fov*Math.PI/180,hf=2*Math.atan(Math.tan(v/2)*c.aspect),dd=r/Math.sin(Math.min(v,hf)/2)*.95,e=elev*Math.PI/180,a=azi*Math.PI/180;
+  const fit=(elev,azi)=>{const cx=W/2,cz=G.sb/2,r=Math.hypot(W,G.sb)/2,v=c.fov*Math.PI/180,hf=2*Math.atan(Math.tan(v/2)*c.aspect),dd=r/Math.sin(Math.min(v,hf)/2)*.7,e=elev*Math.PI/180,a=azi*Math.PI/180;
     c.position.set(cx+dd*Math.cos(e)*Math.sin(a),dd*Math.sin(e),cz+dd*Math.cos(e)*Math.cos(a));t.target.set(cx,0,cz)};
   if(k=='f-top')fit(62,0);if(k=='f-iso')fit(34,-38);if(k=='f-front')fit(40,0);
   c.updateProjectionMatrix();
