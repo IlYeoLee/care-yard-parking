@@ -39,7 +39,9 @@ h1 em{font-style:normal;font-weight:800;color:var(--navy)}
 .ghost{background:var(--surface);color:var(--navy);box-shadow:var(--e1)}
 .sheet3{position:relative;background:#EEF1F5;box-shadow:var(--e1)}
 #c3{height:min(74vh,780px)}
-#c3 canvas{display:block}
+#c3{position:relative;overflow:hidden}
+#c3 canvas{display:block;width:100%;height:100%}
+.sheet3{min-width:0}
 .v3bar{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;z-index:1}
 .v3bar button{min-height:40px;background:var(--surface);color:var(--navy);box-shadow:var(--e1)}
 .v3bar #fs3{margin-left:auto}
@@ -676,7 +678,8 @@ function build3D(G){
     const camera=new T3.PerspectiveCamera(35,1,.3,2000),controls=new T3.OrbitControls(camera,renderer.domElement);
     controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.495;
     R3={renderer,camera,controls,scene:null};
-    const size=()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()};
+    const size=()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false); // 스타일은 CSS(100%)에 맡겨야 전체화면 뒤 레이아웃이 안 깨짐
+      camera.aspect=w/h;camera.updateProjectionMatrix()};
     new ResizeObserver(size).observe(host);size();
     const loop=()=>{t3raf=requestAnimationFrame(loop);if($('s3').hidden||!R3.scene)return;controls.update();if(R3.movers&&$('anim').checked)moveCars();renderer.render(R3.scene,camera)};loop();
   }
@@ -878,7 +881,7 @@ function moveCars(){const {pts,cum,L}=R3.route,t=performance.now()/1000;R3.mover
 function cam3(k){
   const G=CUR,c=R3.camera,t=R3.controls,W=G.W,H=G.PB,gx=G.core.gx;R3.cam=k;
   if(k=='top'){c.position.set(W/2,Math.max(W,H)*1.55,H/2+.01);t.target.set(W/2,0,H/2)}
-  if(k=='iso'){const D=Math.max(W,H)*1.15;c.position.set(W/2+D*.35,D*.62,H/2+D*.75);t.target.set(W/2,0,H/2)} // 부지 크기에 맞춘 남동쪽 사선
+  if(k=='iso'){const D=Math.max(W,H)*1.12;c.position.set(W/2-D*.42,D*.62,H/2+D*.78);t.target.set(W/2,0,H/2)} // 남서쪽 모서리에서 내려다보는 사선
   if(k=='kid'){c.position.set(gx-6,1.25,G.yb-1.5);t.target.set(gx-2,1.1,G.yi0+G.Hs*.4)}
   t.update();
 }
