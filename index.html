@@ -129,7 +129,7 @@ td.n,th.n{text-align:right}
         <p id="cap" aria-live="polite">A와 D가 동시에 빠지고, 뒤따라온 B가 빈 도크에 들어가는 과정</p>
       </div>
       <div class="sheet"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Care Yard 평면 배치도"></svg></div>
-      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" data-cam="f-top">정중앙 조감</button><button type="button" data-cam="f-iso">정중앙 사선</button><button type="button" data-cam="f-front">정중앙 정면</button><button type="button" data-cam="s-persp">간판 원근</button><button type="button" data-cam="s-persp2">간판 원근 2</button><button type="button" data-cam="s-front">간판 정면</button><button type="button" data-cam="s-row">간판 열</button><button type="button" data-cam="s-hero">간판 히어로</button><button type="button" data-cam="s-corner">코너</button><button type="button" data-cam="s-aerial">도크 조감</button><button type="button" data-cam="s-tele">망원</button><button type="button" data-cam="s-gate">게이트</button><button type="button" id="fs3">전체화면</button><button type="button" id="sig3">간판 레이어 PNG</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
+      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" data-cam="f-top">정중앙 조감</button><button type="button" data-cam="f-iso">정중앙 사선</button><button type="button" data-cam="f-front">정중앙 정면</button><button type="button" data-cam="s-persp">간판 원근</button><button type="button" data-cam="s-persp2">간판 원근 2</button><button type="button" data-cam="s-front">간판 정면</button><button type="button" data-cam="s-row">간판 열</button><button type="button" data-cam="s-hero">간판 히어로</button><button type="button" data-cam="s-hero2">간판 히어로 + 차</button><button type="button" data-cam="s-corner">코너</button><button type="button" data-cam="s-aerial">도크 조감</button><button type="button" data-cam="s-tele">망원</button><button type="button" data-cam="s-gate">게이트</button><button type="button" id="fs3">전체화면</button><button type="button" id="sig3">간판 레이어 PNG</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
       <div class="tbl">
         <table id="cmp"></table>
         <p class="cap">차종, 도크 수, 도로 폭은 오른쪽 설정을 따름. 행을 누르면 도면이 바뀜.<br>크기 비교 기준: 초등학교 운동장 3,000㎡ (학생 600명 이하 법정 최소), 농구코트 420㎡ (28 × 15 m)</p>
@@ -835,6 +835,7 @@ function build3D(G){
   // ── 도크 줄: 부두 · 칸 · 차 · 가림판 · 충전기 · XL 사이니지(피그마 카드 무작위) · 승하차 장면 ──
   const cardAspect=200/761,sgH=2,sgW=sgH*cardAspect;
   const occN=Math.round(G.n*.75),hs=n=>(n*2654435761)%4294967296,occ=new Set([...Array(G.n)].map((_,i)=>i+1).sort((a,b)=>hs(a)-hs(b)).slice(0,occN)); // 3D에선 도크의 75%만 도킹 (나머지는 픽업·EXPLORE 중), 고정 무작위
+  R3.occ=occ;
   G.rows.forEach(o=>{
     const grp=new T3.Group();grp.position.set(o.x,0,o.y);grp.rotation.y=-o.a*Math.PI/180;S3.add(grp);
     const bd=v.bd,bw=G.bw;
@@ -916,6 +917,9 @@ function cam3(k){
   if(k=='s-persp2')set([xe+2,1.45,tz+1.7],[xe-14,1.25,tz-1.2],52);
   if(k=='s-front')set([mid,1.7,tz+17],[mid,1.15,tz],20);                                   // 정면 망원: 간판 4~5개 압축
   if(k=='s-row')set([xs+(xe-xs)*.12,1.6,tz+7.5],[xs+(xe-xs)*.55,1.1,tz],28);              // 3/4 각도로 간판 줄이 비스듬히 멀어짐
+  if(k=='s-hero2'){const oc=R3.occ||new Set(),has=i=>i>=0&&i<sl.length&&oc.has(top.no0+i+1);let bi=hi,bs=-1e9; // 차가 있는 도크 (양옆도 차 있으면 가산), 가운데에 가깝게
+    for(let i=0;i<sl.length;i++){const sc=(has(i)?4:0)+(has(i-1)?2:0)+(has(i+1)?1:0)-Math.abs(i-hi)*.1;if(sc>bs){bs=sc;bi=i}}
+    set([tx(bi)+2.6,1.35,tz+4.4],[tx(bi)+.2,1.2,tz-.2],30)}
   if(k=='s-hero')set([tx(hi)+2.6,1.35,tz+4.4],[tx(hi)+.2,1.2,tz-.2],30);                  // 간판 하나 크게 + 뒤 차 스크린
   if(k=='s-corner'){const cx=left.x+G.d,cz=top.y+G.d;set([cx+15,2.4,cz+15],[cx+2,1.1,cz+2],26)}
   if(k=='s-aerial')set([mid-4,7.5,tz+11],[mid+1,.8,tz-1],32);
