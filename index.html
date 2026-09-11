@@ -129,7 +129,7 @@ td.n,th.n{text-align:right}
         <p id="cap" aria-live="polite">A와 D가 동시에 빠지고, 뒤따라온 B가 빈 도크에 들어가는 과정</p>
       </div>
       <div class="sheet"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Care Yard 평면 배치도"></svg></div>
-      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" data-cam="s-front">간판 정면</button><button type="button" data-cam="s-row">간판 열</button><button type="button" data-cam="s-hero">간판 히어로</button><button type="button" data-cam="s-corner">코너</button><button type="button" data-cam="s-aerial">도크 조감</button><button type="button" data-cam="s-tele">망원</button><button type="button" data-cam="s-gate">게이트</button><button type="button" id="fs3">전체화면</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
+      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" data-cam="f-top">정중앙 조감</button><button type="button" data-cam="f-iso">정중앙 사선</button><button type="button" data-cam="f-front">정중앙 정면</button><button type="button" data-cam="s-front">간판 정면</button><button type="button" data-cam="s-row">간판 열</button><button type="button" data-cam="s-hero">간판 히어로</button><button type="button" data-cam="s-corner">코너</button><button type="button" data-cam="s-aerial">도크 조감</button><button type="button" data-cam="s-tele">망원</button><button type="button" data-cam="s-gate">게이트</button><button type="button" id="fs3">전체화면</button><button type="button" id="sig3">간판 레이어 PNG</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
       <div class="tbl">
         <table id="cmp"></table>
         <p class="cap">차종, 도크 수, 도로 폭은 오른쪽 설정을 따름. 행을 누르면 도면이 바뀜.<br>크기 비교 기준: 초등학교 운동장 3,000㎡ (학생 600명 이하 법정 최소), 농구코트 420㎡ (28 × 15 m)</p>
@@ -679,7 +679,7 @@ function signTex(T3,lines,bg,fg,w=1024,h=256){ // 영문 간판: 첫 줄 크게,
 function build3D(G){
   const T3=THREE,host=$('c3');
   if(!R3){
-    const renderer=new T3.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+    const renderer=new T3.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:true});
     renderer.shadowMap.enabled=true;renderer.shadowMap.type=T3.PCFSoftShadowMap;renderer.outputEncoding=T3.sRGBEncoding;
     renderer.toneMapping=T3.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;renderer.setPixelRatio(Math.min(2,devicePixelRatio));
     host.appendChild(renderer.domElement);
@@ -700,7 +700,7 @@ function build3D(G){
   const cyl=(par,r1,r2,h,m,x,y,z,seg=12)=>mesh(par,new T3.CylinderGeometry(r1,r2,h,seg),m,x,y,z);
   const board=(par,tex,w,h,x,y,z,rotY=0,back=true)=>{const m=new T3.MeshStandardMaterial({map:tex,roughness:.5,emissive:'#FFFFFF',emissiveMap:tex,emissiveIntensity:.15});
     const g=new T3.Group();g.position.set(x,y,z);g.rotation.y=rotY;par.add(g);
-    const f=new T3.Mesh(new T3.PlaneGeometry(w,h),m);f.position.z=.01;g.add(f);if(back){const b=f.clone();b.rotation.y=Math.PI;b.position.z=-.01;g.add(b)}return g};
+    const f=new T3.Mesh(new T3.PlaneGeometry(w,h),m);f.userData.sign=1;f.position.z=.01;g.add(f);if(back){const b=f.clone();b.rotation.y=Math.PI;b.position.z=-.01;g.add(b)}return g};
   const {v,R,m,d,Gw,teeth,Hs,yi0,yb,PB,sy,sb,core,W}=G,Tn=v.turn,cl=B+R/2,cr=W-B-R/2,gx=core.gx;
   const cLot=mat('#DDE3EA'),cRoad=mat('#A9B2C0'),cBay=mat('#BCC4D0'),cPed=mat('#FFFFFF'),cYard=mat('#DCEBDC'),cPlant=mat('#CFE3CF'),cNavy=mat('#1B2A5E'),
     cWhite=mat('#FFFFFF',{roughness:.35}),cGlass=mat('#22283A',{roughness:.15,metalness:.2}),cTire=mat('#22222A'),cPink=mat('#1B2A5E',{transparent:true,opacity:.6,roughness:.3}),
@@ -815,7 +815,7 @@ function build3D(G){
   const car=(par,cx,cz,ci=0)=>{const g=new T3.Group();g.position.set(cx,0,cz);par.add(g);
     const L=v.L,Wd=v.W;box(g,cWhite,-Wd/2,-L/2,Wd,L,1.25,.32);box(g,cGlass,-Wd/2-.01,-L/2+.55,Wd+.02,L-1.2,.5,1.3);
     box(g,cWhite,-Wd/2+.05,-L/2+.4,Wd-.1,L-.9,.14,1.78);box(g,cGlass,-Wd/2+.12,L/2-.62,Wd-.24,.3,.55,1.2);
-    box(g,cDark,-Wd/2+.1,L/2-.02,Wd-.2,.06,.42,.79,false);const scr=new T3.Mesh(new T3.PlaneGeometry(Wd-.3,(Wd-.3)*216/1096),screenMat(ci,T3));scr.position.set(0,1,L/2+.045);g.add(scr); // 앞 스크린
+    box(g,cDark,-Wd/2+.1,L/2-.02,Wd-.2,.06,.42,.79,false);const scr=new T3.Mesh(new T3.PlaneGeometry(Wd-.3,(Wd-.3)*216/1096),screenMat(ci,T3));scr.position.set(0,1,L/2+.045);scr.userData.sign=1;g.add(scr); // 앞 스크린
     for(const sx of [-1,1])for(const sz of [-1,1]){const w=new T3.Mesh(new T3.CylinderGeometry(.34,.34,.24,18),cTire);w.rotation.z=Math.PI/2;w.position.set(sx*(Wd/2-.08),.34,sz*(L/2-.85));w.castShadow=true;g.add(w)}return g};
   // ── 도크 줄: 부두 · 칸 · 차 · 가림판 · 충전기 · XL 사이니지(피그마 카드 무작위) · 승하차 장면 ──
   const cardAspect=200/761,sgH=2,sgW=sgH*cardAspect;
@@ -835,7 +835,7 @@ function build3D(G){
       box(grp,mat('#00B84A',{emissive:'#00B84A',emissiveIntensity:.7}),chx+.07,bd+.46,.21,.01,.28,1.05,false);box(grp,cDark,chx+.1,bd+.46,.15,.08,.12,.75);
       // XL 사이니지 2.0 m (양면)
       box(grp,cDark,cx-.35,d-.55,.7,.3,.1,.15);
-      const tm=new T3.Mesh(new T3.BoxGeometry(sgW,sgH,.1),cardMats(ci,T3));tm.position.set(cx,.25+sgH/2,d-.4);tm.castShadow=true;grp.add(tm);
+      const tm=new T3.Mesh(new T3.BoxGeometry(sgW,sgH,.1),cardMats(ci,T3));tm.position.set(cx,.25+sgH/2,d-.4);tm.castShadow=true;tm.userData.sign=1;grp.add(tm);
       // 승하차: 3대마다 부두에 아이, 사이니지 옆에 보호자
       if(occ.has(no)&&no%3==1){kidAt(grp,px,bd*.45,0,.15);adultAt(grp,cx+.9,d-.9,Math.PI,.15)}
     });
@@ -902,6 +902,10 @@ function cam3(k){
   if(k=='s-aerial')set([mid-7,13,tz+15],[mid-2,.4,tz-2],35);
   if(k=='s-tele')set([mid,2,G.yb-3],[mid,1.3,tz],14);
   if(k=='s-gate')set([gx,1.6,H+1.5],[gx,1.3,G.yi0],42);
+  // 정중앙: 부지+거리를 감싸는 구가 화면에 꽉 차게
+  const fit=(elev,azi)=>{const cx=W/2,cz=G.sb/2,r=Math.hypot(W,G.sb)/2,v=c.fov*Math.PI/180,hf=2*Math.atan(Math.tan(v/2)*c.aspect),dd=r/Math.sin(Math.min(v,hf)/2)*.95,e=elev*Math.PI/180,a=azi*Math.PI/180;
+    c.position.set(cx+dd*Math.cos(e)*Math.sin(a),dd*Math.sin(e),cz+dd*Math.cos(e)*Math.cos(a));t.target.set(cx,0,cz)};
+  if(k=='f-top')fit(62,0);if(k=='f-iso')fit(34,-38);if(k=='f-front')fit(40,0);
   c.updateProjectionMatrix();
   t.update();
 }
@@ -913,6 +917,16 @@ function capture3(){
 $('v3').onclick=()=>show3D($('s3').hidden);
 document.querySelectorAll('[data-cam]').forEach(b=>b.onclick=()=>cam3(b.dataset.cam));
 $('cap3').onclick=capture3;
+// 간판 레이어: 사이니지·앞 스크린·영문 간판만 남기고 투명 배경. 나머지는 깊이만 써서 가려짐은 그대로
+function captureSigns(){
+  const r=R3.renderer,S3=R3.scene,pr=r.getPixelRatio(),bg=S3.background,fog=S3.fog,swap=[],dm=new THREE.MeshBasicMaterial({colorWrite:false});
+  S3.traverse(o=>{if(o.isMesh&&!o.userData.sign){swap.push([o,o.material]);o.material=dm}});
+  S3.background=null;S3.fog=null;r.setClearColor(0x000000,0);r.setPixelRatio(3);r.render(S3,R3.camera);
+  const url=r.domElement.toDataURL('image/png');
+  swap.forEach(([o,m])=>o.material=m);S3.background=bg;S3.fog=fog;r.setPixelRatio(pr);dm.dispose();
+  const a=document.createElement('a');a.href=url;a.download=`care-yard-signs-${R3.cam||'view'}.png`;a.click();
+}
+$('sig3').onclick=captureSigns;
 $('fs3').onclick=()=>document.fullscreenElement?document.exitFullscreen():$('s3').requestFullscreen();
 document.addEventListener('fullscreenchange',()=>$('fs3').textContent=document.fullscreenElement?'전체화면 닫기':'전체화면');
 
