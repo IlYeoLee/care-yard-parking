@@ -689,13 +689,19 @@ function build3D(G){
     cWhite=mat('#FFFFFF',{roughness:.35}),cGlass=mat('#22283A',{roughness:.15,metalness:.2}),cTire=mat('#22222A'),cPink=mat('#1B2A5E',{transparent:true,opacity:.6,roughness:.3}),
     cTree=mat('#B7D3B9',{flatShading:true}),cTree2=mat('#A7C9AA',{flatShading:true}),cTrunk=mat('#9C8B7A'),cDark=mat('#22222A'),cPath=mat('#F1ECE3'),cSand=mat('#EAD9B5'),cYellow=mat('#FFB800',{roughness:.4});
   // 바닥 · 거리 · 인도 · 횡단보도
-  flat(S3,new T3.PlaneGeometry(W*6,W*6),mat('#E4E9EF'),W/2,-.02,PB/2);
+  flat(S3,new T3.PlaneGeometry(W*12,W*12),mat('#E9EDF2'),W/2,-.02,PB/2); // 배경과 같은 색이라 지평선 경계가 안 보임
   box(S3,cLot,0,0,W,PB,.02,-.01,false);
-  box(S3,cRoad,-12,sy,W+24,ST,.03,0,false);
-  for(let x=-10;x<W+10;x+=3.5)box(S3,cPed,x,sy+ST/2-.08,2,.16,.01,.03,false);
+  // 거리·인도는 양옆으로 길게 빼고 끝을 그라디언트로 투명하게 (페더)
+  const E=Math.max(60,W*.8),LS=W+2*E,fz=E*.85/LS;
+  const cv=(w,h,draw)=>{const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);return c};
+  const fade=new T3.CanvasTexture(cv(512,4,(x,w,h)=>{const g=x.createLinearGradient(0,0,w,0);g.addColorStop(0,'#000');g.addColorStop(fz,'#fff');g.addColorStop(1-fz,'#fff');g.addColorStop(1,'#000');x.fillStyle=g;x.fillRect(0,0,w,h)}));
+  const roadTex=new T3.CanvasTexture(cv(4096,256,(x,w,h)=>{x.fillStyle='#A9B2C0';x.fillRect(0,0,w,h);x.fillStyle='#FFFFFF';const pm=w/LS,dh=.16/ST*h;for(let q=0;q<LS;q+=3.5)x.fillRect(q*pm,h/2-dh/2,2*pm,dh)}));
+  roadTex.encoding=T3.sRGBEncoding;roadTex.anisotropy=8;
+  flat(S3,new T3.PlaneGeometry(LS,ST),new T3.MeshStandardMaterial({map:roadTex,alphaMap:fade,transparent:true,roughness:.85}),W/2,.03,sy+ST/2);
+  const walkM=new T3.MeshStandardMaterial({color:new T3.Color('#FFFFFF').convertSRGBToLinear(),alphaMap:fade,transparent:true,roughness:.85});
   for(let z=sy+.5;z<sb-.3;z+=.9)box(S3,cPed,gx-2,z,4,.45,.01,.03,false);
-  box(S3,cPed,-12,PB,12+B,WALK,.15);box(S3,cPed,B+R,PB,W-2*B-2*R,WALK,.15);box(S3,cPed,W-B,PB,12+B,WALK,.15); // 진입로·출구 자리는 인도를 끊음
-  box(S3,cPed,-12,sb,W+24,3,.15); // 건너편 인도
+  box(S3,walkM,-E,PB,LS,WALK,.15);box(S3,walkM,-E,sb,LS,3,.15); // 인도 · 건너편 인도
+  box(S3,cRoad,B,PB,R,WALK,.16,0,false);box(S3,cRoad,W-B-R,PB,R,WALK,.16,0,false); // 진입로·출구는 인도를 끊고 차도로
   box(S3,cPed,gx+3.3,sy+.2,.4,ST/2-.35,.01,.03,false);box(S3,cPed,gx-3.7,sy+ST/2+.15,.4,ST/2-.35,.01,.03,false); // 정지선
   const lamp=(c,on)=>mat(c,on?{emissive:c,emissiveIntensity:1.3,roughness:.3}:{roughness:.3});
   const signal=(x,z,laneZ,dirX,faceZ)=>{ // 차량 3구 신호(초록) + 보행 신호(빨강), 차가 계속 달리므로 차량 신호가 초록
@@ -836,9 +842,9 @@ function build3D(G){
   fence(B+R,yb,B+R,PB);fence(B+R,PB,gx-2.4,PB);fence(gx+2.4,PB,W-B-R,PB);fence(W-B-R,PB,W-B-R,yb);
   teeth.forEach((q,j)=>{if(j<m-1){const g0=q.x0+2*d+q.Wy,cx=g0+R/2+Tn,ro=Tn+R/2;let p=[g0,yb];for(let k=1;k<=16;k++){const a=Math.PI-k*Math.PI/16,n=[cx+ro*Math.cos(a),yb+ro*Math.sin(a)];fence(p[0],p[1],n[0],n[1]);p=n}}});
   // 순환도로를 도는 차 3대 (평면도 배경 흐름과 같은 경로)
-  const ly=sy+ST*.25,ct=B+R/2,pts=[[W+14,ly],[cl,ly],[cl,ct]];
+  const ly=sy+ST*.25,ct=B+R/2,pts=[[W+E*.9,ly],[cl,ly],[cl,ct]];
   teeth.forEach((q,j)=>{if(j<m-1){const g0=q.x0+2*d+q.Wy,hd=g0+R/2,hu=g0+Gw-R/2,ccx=(hd+hu)/2;pts.push([hd,ct],[hd,yb]);for(let k=1;k<16;k++){const a=Math.PI-k*Math.PI/16;pts.push([ccx+Tn*Math.cos(a),yb+Tn*Math.sin(a)])}pts.push([hu,yb],[hu,ct])}});
-  pts.push([cr,ct],[cr,ly],[-14,ly]);
+  pts.push([cr,ct],[cr,ly],[-E*.9,ly]);
   const cum=[0];for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
   R3.route={pts,cum,L:cum[cum.length-1]};R3.movers=[0,1,2].map(i=>({g:car(S3,0,0),off:i*R3.route.L/3}));moveCars();
   // 빛
