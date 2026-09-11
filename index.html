@@ -879,7 +879,7 @@ function moveCars(){const {pts,cum,L}=R3.route,t=performance.now()/1000;R3.mover
 function cam3(k){
   const G=CUR,c=R3.camera,t=R3.controls,W=G.W,H=G.PB,gx=G.core.gx;R3.cam=k;
   if(k=='top'){c.position.set(W/2,Math.max(W,H)*1.55,H/2+.01);t.target.set(W/2,0,H/2)}
-  if(k=='iso'){c.position.set(W*1.1,Math.max(W,H)*.85,H*1.3);t.target.set(W/2,0,H*.48)}
+  if(k=='iso'){const D=Math.max(W,H)*1.15;c.position.set(W/2+D*.35,D*.62,H/2+D*.75);t.target.set(W/2,0,H/2)} // 부지 크기에 맞춘 남동쪽 사선
   if(k=='kid'){c.position.set(gx-6,1.25,G.yb-1.5);t.target.set(gx-2,1.1,G.yi0+G.Hs*.4)}
   t.update();
 }
