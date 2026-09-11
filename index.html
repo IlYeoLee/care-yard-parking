@@ -34,6 +34,14 @@ h1 em{font-style:normal;font-weight:800;color:var(--navy)}
 #bestBox li{display:grid;grid-template-columns:16px 1fr}
 #bestBox li::before{content:"";width:6px;height:6px;background:var(--navy);margin-top:8px}
 #bestBox .res{display:flex;flex-wrap:wrap;gap:12px 36px}
+.ghost{background:var(--surface);color:var(--navy);box-shadow:var(--e1)}
+.sheet3{position:relative;background:#EEF1F5;box-shadow:var(--e1)}
+#c3{height:min(74vh,780px)}
+#c3 canvas{display:block}
+.v3bar{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;z-index:1}
+.v3bar button{min-height:40px;background:var(--surface);color:var(--navy);box-shadow:var(--e1)}
+.v3bar #cap3{background:var(--navy);color:#fff;margin-left:auto}
+.v3note{position:absolute;bottom:10px;left:12px;margin:0;font-size:12px;color:var(--faint)}
 .scenebar{display:flex;gap:16px;align-items:center;background:var(--surface);box-shadow:var(--e1);padding:12px 16px}
 .scenebar p{margin:0;font-size:14px;line-height:1.5;min-height:3em;display:flex;align-items:center}
 button{font:800 14px "42dot Sans",sans-serif;letter-spacing:-.02em;background:var(--navy);color:#fff;border:0;border-radius:999px;min-height:44px;padding:0 20px;cursor:pointer;white-space:nowrap;box-shadow:var(--cta)}
@@ -108,9 +116,11 @@ td.n,th.n{text-align:right}
       <div class="box" id="bestBox" hidden></div>
       <div class="scenebar">
         <button id="play" type="button">출차 장면 재생</button>
+        <button id="v3" type="button" class="ghost">3D 보기</button>
         <p id="cap" aria-live="polite">A와 D가 동시에 빠지고, 뒤따라온 B가 빈 도크에 들어가는 과정</p>
       </div>
       <div class="sheet"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Care Yard 평면 배치도"></svg></div>
+      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
       <div class="tbl">
         <table id="cmp"></table>
         <p class="cap">차종, 도크 수, 도로 폭은 오른쪽 설정을 따름. 행을 누르면 도면이 바뀜.<br>크기 비교 기준: 초등학교 운동장 3,000㎡ (학생 600명 이하 법정 최소), 농구코트 420㎡ (28 × 15 m)</p>
@@ -458,6 +468,7 @@ function render(){
   ];
   $('checks').innerHTML=c.map(([ok,t])=>`<li><i class="pxl ${ok?'ok':'warn'}" aria-label="${ok?'OK':'확인 필요'}"></i><span>${t}</span></li>`).join('');
   table();
+  if(window.THREE&&R3&&!$('s3').hidden)build3D(G);
 }
 
 function table(){
@@ -500,6 +511,7 @@ function resetScene(){
 function stopScene(){cancelAnimationFrame(raf);raf=0;$('play').textContent='출차 장면 재생'}
 
 function play(){
+  if(!$('s3').hidden)show3D(false);
   if(raf){stopScene();resetScene();applyAnim();return}
   const svg=$('plan'),xp=$('xp'),Lt=xp.getTotalLength(),R=S.R,A=SCN.a,D=SCN.d;
   svg.classList.add('still');svg.pauseAnimations();
@@ -611,6 +623,133 @@ function best(){
   $('bestBox').scrollIntoView({behavior:'smooth',block:'start'});
 }
 $('bestBtn').onclick=best;
+
+// ── 3D 보기 (Three.js, 평면도와 같은 geo() 결과로 세움) ──
+let R3=null,t3raf=0;
+const loadJS=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+async function show3D(on){
+  $('s3').hidden=!on;document.querySelector('.sheet').hidden=on;$('v3').textContent=on?'평면도 보기':'3D 보기';
+  if(!on)return;
+  if(!window.THREE){$('v3').textContent='불러오는 중';await loadJS('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');await loadJS('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js');$('v3').textContent='평면도 보기'}
+  build3D(CUR);
+}
+function totemTex(no,zone,col){ // 피그마 Cards / Tall 형식: 활동명 · 번호 · 시간 · 상태 칩 · 불릿 · 픽셀 아트
+  const c=document.createElement('canvas');c.width=240;c.height=800;const x=c.getContext('2d'),F='"42dot Sans",sans-serif';
+  x.fillStyle=col;x.fillRect(0,0,240,800);x.fillStyle='#fff';
+  x.font=`800 30px ${F}`;x.fillText(zone,22,58);
+  x.font=`700 128px ${F}`;x.fillText(String(no).padStart(2,'0'),16,200);
+  const h=13+no%6;x.font=`600 22px ${F}`;x.fillText(`${h}:30—${h+1}:20`,22,248);
+  x.fillRect(22,268,118,28);x.fillStyle=col;x.font=`800 15px ${F}`;x.fillText(['BOARDING','READY','IN SESSION'][no%3],32,288);
+  x.fillStyle='#fff';x.font=`500 17px ${F}`;x.fillRect(22,334,8,8);x.fillText('Stay · Guided',38,343);
+  let r=no*9301+49297;const rnd=()=>(r=(r*9301+49297)%233280)/233280;
+  for(let i=0;i<11;i++)for(let j=0;j<8;j++)if(rnd()<.38+i*.03){x.fillStyle=`rgba(255,255,255,${.3+rnd()*.65})`;x.fillRect(j*30,580+i*20,30,20)}
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;
+}
+function build3D(G){
+  const T3=THREE,host=$('c3');
+  if(!R3){
+    const renderer=new T3.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+    renderer.shadowMap.enabled=true;renderer.shadowMap.type=T3.PCFSoftShadowMap;renderer.outputEncoding=T3.sRGBEncoding;
+    renderer.toneMapping=T3.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;renderer.setPixelRatio(Math.min(2,devicePixelRatio));
+    host.appendChild(renderer.domElement);
+    const camera=new T3.PerspectiveCamera(35,1,.5,2000),controls=new T3.OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.495;
+    R3={renderer,camera,controls,scene:null};
+    const size=()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()};
+    new ResizeObserver(size).observe(host);size();
+    const loop=()=>{t3raf=requestAnimationFrame(loop);if($('s3').hidden)return;controls.update();renderer.render(R3.scene,camera)};loop();
+  }
+  if(R3.scene)R3.scene.traverse(o=>{o.geometry&&o.geometry.dispose();[].concat(o.material||[]).forEach(m=>{m.map&&m.map.dispose();m.dispose()})});
+  const S3=new T3.Scene();S3.background=new T3.Color('#EEF1F5');S3.fog=new T3.Fog('#EEF1F5',G.W*1.6,G.W*4);R3.scene=S3;
+  const M={},mat=(c,o={})=>M[c+JSON.stringify(o)]||(M[c+JSON.stringify(o)]=new T3.MeshStandardMaterial({color:c,roughness:.85,...o}));
+  const box=(par,m,x0,z0,w,d,h,y0=0,sh=true)=>{const b=new T3.Mesh(new T3.BoxGeometry(w,h,d),m);b.position.set(x0+w/2,y0+h/2,z0+d/2);b.castShadow=sh;b.receiveShadow=true;par.add(b);return b};
+  const flat=(par,geo,m,x,y,z)=>{const f=new T3.Mesh(geo,m);f.rotation.x=-Math.PI/2;f.position.set(x,y,z);f.receiveShadow=true;par.add(f);return f};
+  const {v,R,m,d,Gw,teeth,W,Hs,yi0,yb,PB,sy,sb,core}=G,Tn=v.turn,cl=B+R/2,cr=W-B-R/2,ct=B+R/2,gx=core.gx;
+  const cLot=mat('#E3E8EE'),cRoad=mat('#D5DBE3'),cBay=mat('#C7CED9'),cPed=mat('#FFFFFF'),cYard=mat('#DCEBDC'),cPlant=mat('#CFE3CF'),cNavy=mat('#1B2A5E'),cWhite=mat('#FFFFFF',{roughness:.35}),cGlass=mat('#22283A',{roughness:.15,metalness:.2}),cTire=mat('#22222A'),cPink=mat('#FF1F78',{transparent:true,opacity:.55,roughness:.3}),cTree=mat('#B7D3B9',{flatShading:true}),cTrunk=mat('#9C8B7A'),cDark=mat('#22222A');
+  // 바닥 · 거리 · 인도 · 횡단보도
+  flat(S3,new T3.PlaneGeometry(W*6,W*6),mat('#E9EDF2'),W/2,-.02,PB/2);
+  box(S3,cLot,0,0,W,PB,.02,-.01,false);
+  box(S3,cRoad,-12,sy,W+24,ST,.03,0,false);
+  for(let x=-10;x<W+10;x+=3.5)box(S3,cPed,x,sy+ST/2-.08,2,.16,.01,.03,false);
+  for(let z=sy+.5;z<sb-.3;z+=.9)box(S3,cPed,gx-2,z,4,.45,.01,.03,false);
+  box(S3,cPed,-12,PB,W+24,WALK,.15);
+  // 도로 (ㄷ자 + U턴)
+  box(S3,cRoad,B,B,R,sy-B,.03,0,false);box(S3,cRoad,B,B,W-2*B,R,.03,0,false);box(S3,cRoad,W-B-R,B,R,sy-B,.03,0,false);
+  teeth.forEach((q,j)=>{if(j<m-1){const g0=q.x0+2*d+q.Wy;
+    box(S3,cRoad,g0,B+R,R,yb-B-R,.03,0,false);box(S3,cRoad,g0+Gw-R,B+R,R,yb-B-R,.03,0,false);
+    flat(S3,new T3.RingGeometry(Tn-R/2,Tn+R/2,40,1,Math.PI,Math.PI),cRoad,g0+R/2+Tn,.03,yb);
+    box(S3,cPlant,g0+R,B+R+.5,Gw-2*R,yb-B-R-.5,.3);flat(S3,new T3.CircleGeometry(Tn-R/2,32,Math.PI,Math.PI),cPlant,g0+R/2+Tn,.3,yb);
+  }});
+  // 하단 광장
+  box(S3,cPed,B+R,yb,W-2*B-2*R,PB-yb,.15);
+  const tree=(x,z,r)=>{const t=new T3.Mesh(new T3.CylinderGeometry(.14,.18,1.8,8),cTrunk);t.position.set(x,.9,z);t.castShadow=true;S3.add(t);
+    const c=new T3.Mesh(new T3.IcosahedronGeometry(r,1),cTree);c.position.set(x,1.6+r*.8,z);c.scale.y=.85;c.castShadow=true;S3.add(c)};
+  const kid=(x,z,col='#1B2A5E')=>{const k=new T3.Mesh(new T3.CylinderGeometry(.16,.2,.95,10),mat(col));k.position.set(x,.15+.48,z);k.castShadow=true;S3.add(k);
+    const hd=new T3.Mesh(new T3.SphereGeometry(.15,12,10),mat('#F2D5C4'));hd.position.set(x,.15+1.12,z);hd.castShadow=true;S3.add(hd)};
+  const Z=m==1?null:m==2?['MAKE','EXPLORE']:['MAKE','QUIET','EXPLORE'];
+  teeth.forEach(q=>{const yx=q.x0+d;
+    box(S3,cYard,yx,yi0,q.Wy,Hs,.15);
+    for(const x of [q.x0,q.x0+d+q.Wy]){box(S3,cPlant,x+.3,B+R+.3,d-.6,d-.6,.3);tree(x+d/2,B+R+d/2,Math.min(2,d/3.2))}
+    if(S.ex>0){box(S3,cPlant,q.x0,yi0,d,Hs,.25);box(S3,cPlant,yx,B+R,q.Wy,d,.25);box(S3,cPlant,yx+q.Wy,yi0,d,Hs,.25)}
+    const tr=Math.min(3,1+q.Wy*.05);
+    (m==1?[[.12,.32],[.2,.8],[.5,.55],[.8,.3],[.88,.74],[.38,.2],[.64,.84]]:[[.2,.32],[.8,.72],[.78,.24]]).forEach(([a,b])=>tree(yx+q.Wy*a,yi0+Hs*b,tr));
+    [[.3,.45],[.36,.55],[.28,.62],[.62,.42],[.58,.6],[.46,.7]].forEach(([a,b])=>kid(yx+q.Wy*a,yi0+Hs*b));
+  });
+  // 차량 (PV5 비율): 차체 · 유리 띠 · 앞유리 · LED · 바퀴
+  const car=(par,cx,cz,rotY=0)=>{const g=new T3.Group();g.position.set(cx,0,cz);g.rotation.y=rotY;par.add(g);
+    const L=v.L,Wd=v.W;box(g,cWhite,-Wd/2,-L/2,Wd,L,1.25,.32);box(g,cGlass,-Wd/2-.01,-L/2+.55,Wd+.02,L-1.2,.5,1.3);
+    box(g,cWhite,-Wd/2+.05,-L/2+.4,Wd-.1,L-.9,.14,1.78);box(g,cGlass,-Wd/2+.12,L/2-.62,Wd-.24,.3,.55,1.2);
+    box(g,mat('#FFFFFF',{emissive:'#FFFFFF',emissiveIntensity:.6}),-Wd/2+.2,L/2-.02,Wd-.4,.04,.06,1.02,false);
+    for(const sx of [-1,1])for(const sz of [-1,1]){const w=new T3.Mesh(new T3.CylinderGeometry(.34,.34,.24,18),cTire);w.rotation.z=Math.PI/2;w.position.set(sx*(Wd/2-.08),.34,sz*(L/2-.85));w.castShadow=true;g.add(w)}};
+  // 도크 줄
+  G.rows.forEach(o=>{
+    const grp=new T3.Group();grp.position.set(o.x,0,o.y);grp.rotation.y=-o.a*Math.PI/180;S3.add(grp);
+    const zone=Z?Z[o.j]:['MAKE','QUIET','EXPLORE'][o.f],col=ZC[zone],bd=v.bd,bw=G.bw;
+    box(grp,cPed,0,bd,rowLen(o.c,bw,G.share),APR,.15);
+    slots(o.c,bw,G.share).forEach((q,i)=>{const no=o.no0+i+1,cx=q.bay+bw/2;
+      if(q.dp){box(grp,cPed,q.pier,0,P,bd,.15);box(grp,cNavy,q.pier,.05,P,.06,1.1,.15)}
+      box(grp,cBay,q.bay+.06,0,bw-.12,bd,.04,0,false);
+      car(grp,cx,.5+v.L/2);
+      box(grp,cPink,q.bay+.1,bd-.03,bw-.2,.06,1.2,.15);
+      box(grp,mat('#F7F8FA'),q.pier>q.bay?q.bay+.1:q.bay+bw-.45,bd+.2,.35,.25,1.3,.15);box(grp,mat('#00B84A',{emissive:'#00B84A',emissiveIntensity:.5}),q.pier>q.bay?q.bay+.1:q.bay+bw-.45,bd+.19,.35,.02,.12,1.25,false);
+      // XL 사이니지 (양면, 높이 2.0 m)
+      box(grp,cDark,cx-.35,d-.55,.7,.3,.1,.15);
+      const tx=totemTex(no,zone,col),face=new T3.MeshStandardMaterial({map:tx,roughness:.5,emissive:'#FFFFFF',emissiveMap:tx,emissiveIntensity:.25}),side=mat(col);
+      const tm=new T3.Mesh(new T3.BoxGeometry(.6,2,.12),[side,side,side,side,face,face]);tm.position.set(cx,.25+1,d-.4);tm.castShadow=true;grp.add(tm);
+    });
+  });
+  // 서비스 코어 · 보호자 라운지 · 인계 게이트 · 펜스
+  box(S3,cNavy,core.x,core.y,core.w,core.h,3.4,.15);
+  const lx0=gx-3-core.w;box(S3,mat('#EEF1F5'),lx0,core.y,core.w,core.h,.05,.15);
+  for(const [px,pz] of [[lx0+.4,core.y+.4],[lx0+core.w-.6,core.y+.4],[lx0+.4,core.y+core.h-.6],[lx0+core.w-.6,core.y+core.h-.6]])box(S3,cWhite,px,pz,.2,.2,2.8,.15);
+  box(S3,cWhite,lx0,core.y,core.w,core.h,.12,2.95);
+  for(let i=0;i<3;i++)box(S3,cNavy,lx0+1.2+i*2.2,core.y+core.h-2.2,1.4,.45,.45,.15);
+  box(S3,mat('#FF1F78'),gx-2.4,PB-.2,.25,.25,2.8,.15);box(S3,mat('#FF1F78'),gx+2.15,PB-.2,.25,.25,2.8,.15);box(S3,mat('#FF1F78'),gx-2.4,PB-.2,4.8,.25,.3,2.8);
+  const fence=(x0,z0,x1,z1)=>{const L=Math.hypot(x1-x0,z1-z0),f=new T3.Mesh(new T3.BoxGeometry(L,1.1,.06),cNavy);f.position.set((x0+x1)/2,.7,(z0+z1)/2);f.rotation.y=-Math.atan2(z1-z0,x1-x0);f.castShadow=true;S3.add(f)};
+  fence(B+R,yb,B+R,PB);fence(B+R,PB,gx-2.4,PB);fence(gx+2.4,PB,W-B-R,PB);fence(W-B-R,PB,W-B-R,yb);
+  teeth.forEach((q,j)=>{if(j<m-1){const g0=q.x0+2*d+q.Wy,cx=g0+R/2+Tn,ro=Tn+R/2;let p=[g0,yb];for(let k=1;k<=16;k++){const a=Math.PI-k*Math.PI/16,n=[cx+ro*Math.cos(a),yb+ro*Math.sin(a)];fence(p[0],p[1],n[0],n[1]);p=n}}});
+  // 빛
+  S3.add(new T3.HemisphereLight('#FFFFFF','#DDE3EA',.75));
+  const sun=new T3.DirectionalLight('#FFFFFF',1.05),span=Math.max(W,sb)*.7;sun.position.set(W*.85,Math.max(W,sb)*.9,sb+40);sun.target.position.set(W/2,0,PB/2);
+  sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);Object.assign(sun.shadow.camera,{left:-span,right:span,top:span,bottom:-span,near:1,far:Math.max(W,sb)*4});sun.shadow.bias=-.0004;sun.shadow.normalBias=.03;
+  S3.add(sun,sun.target);
+  if(!R3.cam)cam3('iso');
+}
+function cam3(k){
+  const G=CUR,c=R3.camera,t=R3.controls,W=G.W,H=G.PB,gx=G.core.gx;R3.cam=k;
+  if(k=='top'){c.position.set(W/2,Math.max(W,H)*1.55,H/2+.01);t.target.set(W/2,0,H/2)}
+  if(k=='iso'){c.position.set(W*1.15,Math.max(W,H)*.62,H*1.45);t.target.set(W/2,0,H*.45)}
+  if(k=='kid'){c.position.set(gx-6,1.25,G.yb-1.5);t.target.set(gx-6,1.1,G.yi0)}
+  t.update();
+}
+function capture3(){
+  const r=R3.renderer,pr=r.getPixelRatio();r.setPixelRatio(3);r.render(R3.scene,R3.camera);
+  const a=document.createElement('a');a.href=r.domElement.toDataURL('image/png');a.download=`care-yard-3d-${R3.cam||'view'}.png`;a.click();
+  r.setPixelRatio(pr);
+}
+$('v3').onclick=()=>show3D($('s3').hidden);
+document.querySelectorAll('[data-cam]').forEach(b=>b.onclick=()=>cam3(b.dataset.cam));
+$('cap3').onclick=capture3;
 
 function applyAnim(){const on=$('anim').checked,svg=$('plan');svg.classList.toggle('still',!on);on?svg.unpauseAnimations():svg.pauseAnimations()}
 if(matchMedia('(prefers-reduced-motion: reduce)').matches)$('anim').checked=false;
