@@ -410,8 +410,10 @@ function render(){
   });
   // 하단 광장: 서비스 코어 · 보호자 라운지 · 인계 게이트
   g+=`<rect class="core" data-no="core" x="${core.x}" y="${core.y}" width="${core.w}" height="${core.h}"/>`;
-  g+=`<text class="t-core" x="${core.x+1.2}" y="${core.y+2.2}" text-anchor="start">SERVICE CORE</text>`;
-  ['체크인, 인계','스태프, 응급, 화장실','보관, 세척, 충전 관제'].forEach((l,i)=>g+=`<text class="t-core2" x="${core.x+1.2}" y="${core.y+3.9+i*1.4}" text-anchor="start">${l}</text>`);
+  for(const yy of [core.y,core.y+core.h])g+=`<rect x="${core.door[0]-.9}" y="${yy-.25}" width="1.8" height=".5" fill="#FFFFFF"/>`;
+  g+=`<rect x="${core.x+core.w-.25}" y="${core.y+core.h/2-.9}" width=".5" height="1.8" fill="#FFFFFF"/><text class="t-note" x="${core.door[0]}" y="${core.y-.6}">아이 입구</text><text class="t-note" x="${core.door[0]}" y="${core.y+core.h+1.1}">체크인</text><text class="t-note" x="${core.x+core.w+.5}" y="${core.y+core.h/2+.3}" text-anchor="start">직원</text>`;
+  g+=`<text class="t-core" x="${core.x+3}" y="${core.y+2.2}" text-anchor="start">SERVICE CORE</text>`;
+  ['체크인, 인계','스태프, 응급, 화장실','보관, 세척, 충전 관제'].forEach((l,i)=>g+=`<text class="t-core2" x="${core.x+3}" y="${core.y+3.9+i*1.4}" text-anchor="start">${l}</text>`);
   const lx0=gx-3-core.w;
   g+=`<rect class="lounge" x="${lx0}" y="${core.y}" width="${core.w}" height="${core.h}"/>`;
   for(let i=0;i<3;i++)g+=`<rect class="bench" x="${lx0+1.2+i*2.2}" y="${core.y+core.h-2.2}" width="1.4" height=".45"/>`;
@@ -827,6 +829,12 @@ function build3D(G){
   const coreTex=signTex(T3,['SERVICE CORE','CHECK-IN · FIRST AID · RESTROOM'],'#1B2A5E','#FFFFFF');
   board(S3,coreTex,Math.min(core.w*.85,7),1.75,core.x+core.w/2,2.35,core.y+core.h+.02,0,false);
   board(S3,coreTex,Math.min(core.w*.85,7),1.75,core.x+core.w/2,2.35,core.y-.02,Math.PI,false);
+  // 서비스 코어 출입구: 유리문 · 문틀 · 캐노피 · 매트 · 간판 (로컬 +z = 바깥)
+  const doorway=(x,z,rotY,label)=>{const g=new T3.Group();g.position.set(x,.15,z);g.rotation.y=rotY;S3.add(g);
+    box(g,cWhite,-1.1,-.02,2.2,.14,2.7);box(g,cGlass,-.9,.12,1.8,.04,2.4);box(g,cWhite,-.03,.16,.06,.03,2.4);
+    box(g,cWhite,-1.4,-.05,2.8,1.45,.1,2.75);box(g,mat('#C9D0DA'),-1.1,.2,2.2,1.2,.02,0,false);
+    board(g,signTex(T3,[label],'#FFFFFF','#1B2A5E',1024,160),2.3,.36,0,3.05,1.41,0,false)};
+  doorway(core.door[0],core.y,Math.PI,'CARE DECK ENTRANCE');doorway(core.door[0],core.y+core.h,0,'CHECK-IN · HANDOFF');doorway(core.x+core.w,core.y+core.h/2,Math.PI/2,'STAFF · STORAGE');
   const lx0=gx-3-core.w;box(S3,mat('#EEF1F5'),lx0,core.y,core.w,core.h,.05,.15);
   for(const [a,b] of [[lx0+.4,core.y+.4],[lx0+core.w-.6,core.y+.4],[lx0+.4,core.y+core.h-.6],[lx0+core.w-.6,core.y+core.h-.6]])box(S3,cWhite,a,b,.2,.2,2.8,.15);
   box(S3,cWhite,lx0,core.y,core.w,core.h,.12,2.95);
