@@ -657,7 +657,7 @@ function build3D(G){
     R3={renderer,camera,controls,scene:null};
     const size=()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()};
     new ResizeObserver(size).observe(host);size();
-    const loop=()=>{t3raf=requestAnimationFrame(loop);if($('s3').hidden)return;controls.update();renderer.render(R3.scene,camera)};loop();
+    const loop=()=>{t3raf=requestAnimationFrame(loop);if($('s3').hidden||!R3.scene)return;controls.update();renderer.render(R3.scene,camera)};loop();
   }
   if(R3.scene)R3.scene.traverse(o=>{o.geometry&&o.geometry.dispose();[].concat(o.material||[]).forEach(m=>{m.map&&m.map.dispose();m.dispose()})});
   const S3=new T3.Scene();S3.background=new T3.Color('#EEF1F5');S3.fog=new T3.Fog('#EEF1F5',G.W*1.6,G.W*4);R3.scene=S3;
