@@ -650,7 +650,7 @@ function build3D(G){
   if(!R3){
     const renderer=new T3.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
     renderer.shadowMap.enabled=true;renderer.shadowMap.type=T3.PCFSoftShadowMap;renderer.outputEncoding=T3.sRGBEncoding;
-    renderer.toneMapping=T3.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;renderer.setPixelRatio(Math.min(2,devicePixelRatio));
+    renderer.toneMapping=T3.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;renderer.setPixelRatio(Math.min(2,devicePixelRatio));
     host.appendChild(renderer.domElement);
     const camera=new T3.PerspectiveCamera(35,1,.5,2000),controls=new T3.OrbitControls(camera,renderer.domElement);
     controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.495;
@@ -707,7 +707,7 @@ function build3D(G){
     const zone=Z?Z[o.j]:['MAKE','QUIET','EXPLORE'][o.f],col=ZC[zone],bd=v.bd,bw=G.bw;
     box(grp,cPed,0,bd,rowLen(o.c,bw,G.share),APR,.15);
     slots(o.c,bw,G.share).forEach((q,i)=>{const no=o.no0+i+1,cx=q.bay+bw/2;
-      if(q.dp){box(grp,cPed,q.pier,0,P,bd,.15);box(grp,cNavy,q.pier,.05,P,.06,1.1,.15)}
+      if(q.dp){box(grp,cPed,q.pier,0,P,bd,.15);for(const px of [q.pier,q.pier+P-.06])box(grp,cNavy,px,.05,.06,.06,1,.15);box(grp,cNavy,q.pier,.05,P,.05,.05,1.1);box(grp,cNavy,q.pier,.05,P,.05,.04,.65)}
       box(grp,cBay,q.bay+.06,0,bw-.12,bd,.04,0,false);
       car(grp,cx,.5+v.L/2);
       box(grp,cPink,q.bay+.1,bd-.03,bw-.2,.06,1.2,.15);
@@ -725,11 +725,12 @@ function build3D(G){
   box(S3,cWhite,lx0,core.y,core.w,core.h,.12,2.95);
   for(let i=0;i<3;i++)box(S3,cNavy,lx0+1.2+i*2.2,core.y+core.h-2.2,1.4,.45,.45,.15);
   box(S3,mat('#FF1F78'),gx-2.4,PB-.2,.25,.25,2.8,.15);box(S3,mat('#FF1F78'),gx+2.15,PB-.2,.25,.25,2.8,.15);box(S3,mat('#FF1F78'),gx-2.4,PB-.2,4.8,.25,.3,2.8);
-  const fence=(x0,z0,x1,z1)=>{const L=Math.hypot(x1-x0,z1-z0),f=new T3.Mesh(new T3.BoxGeometry(L,1.1,.06),cNavy);f.position.set((x0+x1)/2,.7,(z0+z1)/2);f.rotation.y=-Math.atan2(z1-z0,x1-x0);f.castShadow=true;S3.add(f)};
+  const fence=(x0,z0,x1,z1)=>{const L=Math.hypot(x1-x0,z1-z0),g=new T3.Group();g.position.set((x0+x1)/2,0,(z0+z1)/2);g.rotation.y=-Math.atan2(z1-z0,x1-x0);S3.add(g); // 난간: 가로대 2줄 + 2.4 m 간격 기둥
+    box(g,cNavy,-L/2,-.025,L,.05,.05,1.1);box(g,cNavy,-L/2,-.02,L,.04,.04,.65);for(let t=-L/2;t<=L/2+.01;t+=Math.max(.5,L/Math.ceil(L/2.4)))box(g,cNavy,t-.03,-.03,.06,.06,1.13,.15)};
   fence(B+R,yb,B+R,PB);fence(B+R,PB,gx-2.4,PB);fence(gx+2.4,PB,W-B-R,PB);fence(W-B-R,PB,W-B-R,yb);
   teeth.forEach((q,j)=>{if(j<m-1){const g0=q.x0+2*d+q.Wy,cx=g0+R/2+Tn,ro=Tn+R/2;let p=[g0,yb];for(let k=1;k<=16;k++){const a=Math.PI-k*Math.PI/16,n=[cx+ro*Math.cos(a),yb+ro*Math.sin(a)];fence(p[0],p[1],n[0],n[1]);p=n}}});
   // 빛
-  S3.add(new T3.HemisphereLight('#FFFFFF','#DDE3EA',.75));
+  S3.add(new T3.HemisphereLight('#FFFFFF','#C9D2DD',.62));
   const sun=new T3.DirectionalLight('#FFFFFF',1.05),span=Math.max(W,sb)*.7;sun.position.set(W*.85,Math.max(W,sb)*.9,sb+40);sun.target.position.set(W/2,0,PB/2);
   sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);Object.assign(sun.shadow.camera,{left:-span,right:span,top:span,bottom:-span,near:1,far:Math.max(W,sb)*4});sun.shadow.bias=-.0004;sun.shadow.normalBias=.03;
   S3.add(sun,sun.target);
@@ -738,7 +739,7 @@ function build3D(G){
 function cam3(k){
   const G=CUR,c=R3.camera,t=R3.controls,W=G.W,H=G.PB,gx=G.core.gx;R3.cam=k;
   if(k=='top'){c.position.set(W/2,Math.max(W,H)*1.55,H/2+.01);t.target.set(W/2,0,H/2)}
-  if(k=='iso'){c.position.set(W*1.15,Math.max(W,H)*.62,H*1.45);t.target.set(W/2,0,H*.45)}
+  if(k=='iso'){c.position.set(W*1.1,Math.max(W,H)*.85,H*1.3);t.target.set(W/2,0,H*.48)}
   if(k=='kid'){c.position.set(gx-6,1.25,G.yb-1.5);t.target.set(gx-6,1.1,G.yi0)}
   t.update();
 }
