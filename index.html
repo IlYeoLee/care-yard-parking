@@ -670,8 +670,8 @@ function build3D(G){
     const loop=()=>{t3raf=requestAnimationFrame(loop);if($('s3').hidden||!R3.scene)return;controls.update();if(R3.movers&&$('anim').checked)moveCars();renderer.render(R3.scene,camera)};loop();
   }
   if(R3.scene)R3.scene.traverse(o=>{o.geometry&&o.geometry.dispose();[].concat(o.material||[]).forEach(m=>{if(!Object.values(CARD_TEX).some(a=>a.includes(m))){m.map&&m.map.dispose();m.dispose()}})});
-  const S3=new T3.Scene();S3.background=new T3.Color('#E9EDF2');S3.fog=new T3.Fog('#E9EDF2',G.W*3,G.W*7);R3.scene=S3;
-  const M={},mat=(c,o={})=>M[c+JSON.stringify(o)]||(M[c+JSON.stringify(o)]=new T3.MeshStandardMaterial({color:c,roughness:.85,...o}));
+  const S3=new T3.Scene();S3.background=new T3.Color('#E9EDF2').convertSRGBToLinear();S3.fog=new T3.Fog(S3.background,G.W*3,G.W*7);R3.scene=S3;
+  const M={},mat=(c,o={})=>M[c+JSON.stringify(o)]||(M[c+JSON.stringify(o)]=new T3.MeshStandardMaterial({roughness:.85,...o,color:new T3.Color(c).convertSRGBToLinear(),...(o.emissive?{emissive:new T3.Color(o.emissive).convertSRGBToLinear()}:{})})) // sRGB 팔레트를 선형으로 (안 하면 전부 뿌옇게 뜸);
   const box=(par,m,x0,z0,w,d,h,y0=0,sh=true)=>{const b=new T3.Mesh(new T3.BoxGeometry(w,h,d),m);b.position.set(x0+w/2,y0+h/2,z0+d/2);b.castShadow=sh;b.receiveShadow=true;par.add(b);return b};
   const mesh=(par,geo,m,x,y,z,sh=true)=>{const o=new T3.Mesh(geo,m);o.position.set(x,y,z);o.castShadow=sh;o.receiveShadow=true;par.add(o);return o};
   const flat=(par,geo,m,x,y,z)=>{const f=mesh(par,geo,m,x,y,z,false);f.rotation.x=-Math.PI/2;return f};
