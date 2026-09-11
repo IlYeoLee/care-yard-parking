@@ -151,7 +151,7 @@ td.n,th.n{text-align:right}
           <li>거리에서 우회전으로 진입</li>
           <li>단지 안은 시계방향 일방통행. 도크는 늘 진행 방향 오른쪽</li>
           <li>전진 도킹 후 바퀴 고정, 충전 연결, 도킹 확인</li>
-          <li>승하차는 부두 쪽 문으로만. 반대쪽 문은 잠김</li>
+          <li>승하차는 부두 쪽 문으로만. 반대쪽 문은 잠김. 부두 양옆은 난간이고 차 문 자리만 스크린도어라 도킹 확인 후에만 열림. 빈 도크는 부두 입구 문이 닫혀 아이가 도크 칸으로 못 내려감</li>
           <li>가림판이 닫히면 후진 출차, 오른쪽 출구로 우회전 퇴장</li>
         </ol>
       </div>
@@ -359,6 +359,7 @@ function row(o,G,col,id){
     const cx=q.bay+bw/2,sc=id&&id.i==i,no=o.no0+i+1;
     if(q.dp)h+=`<rect class="ped" x="${q.pier}" y="0" width="${P}" height="${bd}"/><line class="fence" x1="${q.pier}" y1=".12" x2="${q.pier+P}" y2=".12"/>`;
     h+=`<rect class="bay" x="${q.bay+.06}" y="0" width="${bw-.12}" height="${bd}"/>`;
+    {const D0=.5+v.L*.36,D1=D0+1.1,ex=q.pier<q.bay?q.pier+P:q.pier;h+=`<path class="fence" d="M${ex} .1 V${D0} M${ex} ${D1} V${bd}${q.dp&&q.pier<q.bay?` M${q.pier} .1 V${bd}`:''}"/><line class="psd" x1="${ex}" y1="${D0}" x2="${ex}" y2="${D1}"/>`}
     h+=`<rect class="totem-base" x="${cx-.35}" y="${d-.55}" width=".7" height=".3"/><rect x="${cx-.3}" y="${d-.52}" width=".6" height=".18" fill="${col}"/><rect class="chg" x="${q.pier>q.bay?q.bay+.12:q.bay+bw-.57}" y="${bd+.3}" width=".45" height=".45"/><text class="no" x="${cx}" y="${bd+.95}">${no}</text>`;
     if(sc){h+=`<rect id="kid-${id.k}" class="kid" x="${q.pier+P/2-.35}" y="${bd*.55-.35}" width=".7" height=".7"/><line id="gate-${id.k}" class="gate" x1="${q.pier}" y1="${bd}" x2="${q.pier+P}" y2="${bd}"/>`;
       SCN[id.k]={o,cx,cy:.5+v.L/2,kidY:bd*.55,d}}
@@ -846,6 +847,13 @@ function build3D(G){
       {const ag=new T3.Group();ag.position.set(q.bay+bw/2,.05,bd*.5);ag.rotation.y=-Math.PI/2;grp.add(ag);const ar=new T3.Mesh(new T3.ShapeGeometry(chev),cPed);ar.rotation.x=-Math.PI/2;ar.scale.setScalar(.9);ag.add(ar)} // 코 방향(마당 쪽) 화살표
       const ci=Math.floor(((no*2654435761)%4294967296)/4294967296*12); // 사이니지와 앞 스크린이 같은 카테고리
       if(occ.has(no))car(grp,cx,.5+v.L/2,ci);
+      // 부두 난간: 차 문 쪽 가장자리는 문 자리(D0~D1)만 스크린도어, 반대쪽은 통난간. 빈 도크면 스크린도어·부두 입구가 닫힘
+      {const docked=occ.has(no),D0=.5+v.L*.36,D1=D0+1.1,ex=q.pier<q.bay?q.pier+P:q.pier,psd=mat('#1B2A5E',{transparent:true,opacity:.45,roughness:.3});
+        const rail=(x,z0,z1)=>{if(z1-z0<.1)return;box(grp,cNavy,x-.03,z0,.06,z1-z0,.05,1.1);box(grp,cNavy,x-.02,z0,.04,z1-z0,.04,.65);for(let z=z0;z<=z1+.01;z+=Math.max(.4,(z1-z0)/Math.ceil((z1-z0)/1.2)))box(grp,cNavy,x-.03,z-.03,.06,.06,.98,.15)};
+        rail(ex,.1,D0);rail(ex,D1,bd-.05);
+        box(grp,psd,ex-.025,docked?D1+.05:D0,.05,1.1,1.25,.15); // 스크린도어: 도킹 중엔 옆으로 열림
+        if(q.dp&&q.pier<q.bay)rail(q.pier,.1,bd-.05);
+        if(q.dp&&!docked)box(grp,psd,q.pier+.05,bd-.03,P-.1,.05,1.1,.15)} // 빈 도크: 부두 입구 문 닫힘
       box(grp,cPink,q.bay+.1,bd-.03,bw-.2,.06,1.2,.15);
       // 충전기: 짙은 몸체 + 초록 화면 + 케이블 거치대
       const chx=q.pier>q.bay?q.bay+.12:q.bay+bw-.47;box(grp,mat('#2E3547',{roughness:.4}),chx,bd+.2,.35,.25,1.35,.15);
@@ -999,6 +1007,7 @@ render();
 #plan .totem-base{fill:#22222A}
 #plan .chg{fill:#00B84A}
 #plan .fence{fill:none;stroke:#1B2A5E;stroke-width:.18;opacity:.55}
+#plan .psd{stroke:#1B2A5E;stroke-width:.3;opacity:.45}
 #plan .barrier{stroke:#FF1F78;stroke-width:.26;opacity:.7}
 #plan .barrier.on{stroke-width:.45;opacity:1}
 #plan .gate{stroke:#FF1F78;stroke-width:.45;opacity:0}
