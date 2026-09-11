@@ -812,16 +812,26 @@ function build3D(G){
     cyl(S3,.04,.04,.85,cNavy,cx-1.4,Y+.42,yb-1.2,6);cyl(S3,.04,.04,.85,cNavy,cx+1.4,Y+.42,yb-1.2,6);
   });
   // ── 차량 (PV5 비율) ──
+  // PV5 렌더 스타일: 흰 하부 · 검은 유리 캐빈/지붕 투톤, 앞 검은 띠 스크린 + 흰 LED, 짙은 클래딩, 은색 휠
+  const cBody=mat('#F7F8FA',{roughness:.3}),cBlk=mat('#0F1217',{roughness:.12,metalness:.35}),cClad=mat('#3A3F48',{roughness:.8}),cRim=mat('#C9CED6',{roughness:.3,metalness:.6}),cSil=mat('#AEB4BE',{roughness:.4,metalness:.4});
+  const led=mat('#FFFFFF',{emissive:'#FFFFFF',emissiveIntensity:1}),tail=mat('#FF2D3D',{emissive:'#FF2D3D',emissiveIntensity:1});
   const car=(par,cx,cz,ci=0)=>{const g=new T3.Group();g.position.set(cx,0,cz);par.add(g);
-    const L=v.L,Wd=v.W;box(g,cWhite,-Wd/2,-L/2,Wd,L,1.25,.32);box(g,cGlass,-Wd/2-.01,-L/2+.55,Wd+.02,L-1.2,.5,1.3);
-    box(g,cWhite,-Wd/2+.05,-L/2+.4,Wd-.1,L-.9,.14,1.78);box(g,cGlass,-Wd/2+.12,L/2-.62,Wd-.24,.3,.55,1.2);
-    box(g,cDark,-Wd/2+.1,L/2-.02,Wd-.2,.06,.42,.79,false);const scr=new T3.Mesh(new T3.PlaneGeometry(Wd-.3,(Wd-.3)*216/1096),screenMat(ci,T3));scr.position.set(0,1,L/2+.045);scr.userData.sign=1;g.add(scr); // 앞 스크린
-    // 앞뒤가 한눈에 구분되게: 앞 = 검은 앞유리 면 · 흰 LED 세로띠 · 범퍼 / 뒤 = 뒷유리 · 빨간 후미등 · 범퍼
-    const led=mat('#FFFFFF',{emissive:'#FFFFFF',emissiveIntensity:1}),tail=mat('#FF2D3D',{emissive:'#FF2D3D',emissiveIntensity:1});
-    box(g,cGlass,-Wd/2+.06,L/2-.05,Wd-.12,.08,.5,1.22,false);box(g,cDark,-Wd/2+.1,L/2-.03,Wd-.2,.08,.2,.34,false);
-    box(g,cGlass,-Wd/2+.16,-L/2-.03,Wd-.32,.06,.55,1.08,false);box(g,cDark,-Wd/2+.1,-L/2-.05,Wd-.2,.08,.2,.34,false);
-    for(const sx of [-1,1]){box(g,led,sx*(Wd/2-.07)-.03,L/2-.02,.06,.05,.42,.92,false);box(g,tail,sx*(Wd/2-.08)-.04,-L/2-.04,.08,.06,.8,.78,false)}
-    for(const sx of [-1,1])for(const sz of [-1,1]){const w=new T3.Mesh(new T3.CylinderGeometry(.34,.34,.24,18),cTire);w.rotation.z=Math.PI/2;w.position.set(sx*(Wd/2-.08),.34,sz*(L/2-.85));w.castShadow=true;g.add(w)}return g};
+    const L=v.L,Wd=v.W,h=Wd/2;
+    box(g,cBody,-h,-L/2,Wd,L,.9,.3);                                  // 아래 흰 차체
+    box(g,cBlk,-h+.03,-L/2+.02,Wd-.06,L-.16,.66,1.2);                 // 위 검은 유리 캐빈
+    box(g,cBlk,-h+.06,-L/2+.1,Wd-.12,L-.4,.06,1.86);                  // 검은 지붕
+    box(g,cBlk,-h+.05,-L/2-.015,Wd-.1,.03,.32,.9,false);              // 뒷유리 아래로 연장
+    box(g,cBlk,-h+.04,L/2-.14,Wd-.08,.16,.34,.92,false);              // 앞 검은 띠 (스크린 자리)
+    const scr=new T3.Mesh(new T3.PlaneGeometry(Wd-.34,(Wd-.34)*216/1096),screenMat(ci,T3));scr.position.set(0,1.09,L/2+.025);scr.userData.sign=1;g.add(scr); // 앞 스크린
+    for(const sx of [-1,1]){box(g,led,sx*(h-.05)-.025,L/2-.06,.05,.08,.46,1,false);box(g,tail,sx*(h-.06)-.035,-L/2-.03,.07,.05,.8,.78,false)} // 앞 LED · 뒤 후미등
+    box(g,cClad,-h+.15,L/2-.06,Wd-.3,.14,.46,.24);box(g,cSil,-h+.25,L/2+.07,Wd-.5,.02,.06,.72,false); // 앞 범퍼 + 은색 띠
+    box(g,cClad,-h+.12,-L/2-.05,Wd-.24,.12,.36,.24);box(g,tail,-.2,-L/2+.1,.4,.04,.04,1.84,false);   // 뒤 범퍼 · 보조 제동등
+    for(const sx of [-1,1]){const xo=sx>0?h-.005:-h-.015;box(g,cClad,xo,-L/2+.3,.02,L-.6,.18,.28,false); // 사이드 실
+      for(const sz of [-1,1]){const wz=sz*(L/2-.85);box(g,cClad,xo,wz-.62,.02,1.24,.62,.3,false);        // 휠 아치 클래딩
+        const t=new T3.Mesh(new T3.CylinderGeometry(.36,.36,.26,24),cTire);t.rotation.z=Math.PI/2;t.position.set(sx*(h-.1),.36,wz);t.castShadow=true;g.add(t);
+        const rim=new T3.Mesh(new T3.CylinderGeometry(.27,.27,.02,24),cRim);rim.rotation.z=Math.PI/2;rim.position.set(sx*(h+.035),.36,wz);g.add(rim);
+        box(g,cTire,sx*(h+.045)-.01,wz-.11,.02,.22,.22,.25,false)}}
+    return g};
   // ── 도크 줄: 부두 · 칸 · 차 · 가림판 · 충전기 · XL 사이니지(피그마 카드 무작위) · 승하차 장면 ──
   const cardAspect=200/761,sgH=2,sgW=sgH*cardAspect;
   const occN=Math.round(G.n*.75),hs=n=>(n*2654435761)%4294967296,occ=new Set([...Array(G.n)].map((_,i)=>i+1).sort((a,b)=>hs(a)-hs(b)).slice(0,occN)); // 3D에선 도크의 75%만 도킹 (나머지는 픽업·EXPLORE 중), 고정 무작위
