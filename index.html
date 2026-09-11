@@ -417,16 +417,18 @@ function render(){
   g+=`<rect class="hit" data-no="core" x="${core.x}" y="${core.y}" width="${core.w}" height="${core.h}" fill="transparent"/><rect class="hit" data-no="lounge" x="${lx0}" y="${core.y}" width="${core.w}" height="${core.h}" fill="transparent"/>`;
   g+=`<path class="fence" d="M${px0} ${yb} V${PB} H${gx-2.2} M${gx+2.2} ${PB} H${W-B-R} V${yb}"/>`;
   g+=`<rect x="${gx-2.2}" y="${PB-.3}" width="4.4" height=".6" fill="#FF1F78"/><text class="t-gate" x="${gx}" y="${PB+1.9}">HANDOFF GATE</text>`;
-  g+=`<text class="t-note" x="${gx+2.6}" y="${sy+ST/2+.35}" text-anchor="start">횡단보도</text>`;
+  g+=`<rect class="ped" x="-10" y="${sb}" width="${W+20}" height="3"/><rect class="zebra" x="${gx+3.3}" y="${sy+.2}" width=".4" height="${ST/2-.35}"/><rect class="zebra" x="${gx-3.7}" y="${sy+ST/2+.15}" width=".4" height="${ST/2-.35}"/>`;
+  for(const [x,y] of [[gx+2.5,PB+.9],[gx-3.1,sb+.9]])g+=`<rect x="${x}" y="${y}" width=".6" height=".6" fill="#22222A"/><rect x="${x+.15}" y="${y+.15}" width=".3" height=".3" fill="#00B84A"/>`;
+  g+=`<text class="t-note" x="${gx+3.4}" y="${PB+1.55}" text-anchor="start">신호등</text><text class="t-note" x="${gx+4.3}" y="${sy+ST/2+.35}" text-anchor="start">횡단보도</text>`;
   g+=`<path class="walkline" d="M${gx} ${sb-.5} V${m>1?G.ys:yb-2.5}"/>`;
   if(m>1){const xs=teeth.map(q=>q.x0+d+q.Wy/2);
     g+=`<path class="walkline" d="M${xs[0]} ${yb-2.5} V${G.yw} H${xs[m-1]} V${yb-2.5}${m==3?` M${xs[1]} ${G.yw} V${yb-2.5}`:''}"/>`}
   // 치수 · 축척 · 방위
   g+=`<path class="dim" d="M0 -3 H${W} M0 -3.8 V-2.2 M${W} -3.8 V-2.2"/><text class="t-dim" x="${W/2}" y="-4">${W.toFixed(1)} m</text>`;
   g+=`<path class="dim" d="M-3 0 V${PB} M-3.8 0 H-2.2 M-3.8 ${PB} H-2.2"/><text class="t-dim" transform="translate(-4 ${PB/2}) rotate(-90)">${PB.toFixed(1)} m</text>`;
-  g+=`<rect x="0" y="${sb+2.5}" width="10" height=".6" fill="#1B2A5E"/><rect x="10" y="${sb+2.5}" width="10" height=".6" fill="#C9D0DA"/>`;
-  g+=`<text class="t-dim" x="0" y="${sb+4.8}">0</text><text class="t-dim" x="10" y="${sb+4.8}">10</text><text class="t-dim" x="20" y="${sb+4.8}">20 m</text>`;
-  g+=`<g transform="translate(${W-2} ${sb+4})"><path d="M0 -2.2 L1 1.2 L0 .5 L-1 1.2Z" fill="#1B2A5E"/><text class="t-dim" x="0" y="-2.8">N</text></g>`;
+  g+=`<rect x="0" y="${sb+4.5}" width="10" height=".6" fill="#1B2A5E"/><rect x="10" y="${sb+4.5}" width="10" height=".6" fill="#C9D0DA"/>`;
+  g+=`<text class="t-dim" x="0" y="${sb+6.8}">0</text><text class="t-dim" x="10" y="${sb+6.8}">10</text><text class="t-dim" x="20" y="${sb+6.8}">20 m</text>`;
+  g+=`<g transform="translate(${W-2} ${sb+6})"><path d="M0 -2.2 L1 1.2 L0 .5 L-1 1.2Z" fill="#1B2A5E"/><text class="t-dim" x="0" y="-2.8">N</text></g>`;
   // 배경 흐름 차량 (포켓 차로까지 도는 경로)
   const amb=`M${W+14} ${ly} H${cl} V${ct}${body} H${cr} V${ly} H-14`;
   const ambLen=(W+14-cl)+(ly-ct)*2+(cr-cl)+hp.length*(2*(yb-ct)+Math.PI*T)+cr+14,dur=(ambLen/9).toFixed(1);
@@ -437,7 +439,7 @@ function render(){
   g+=`<g id="wlayer"></g>`+carMv('car-a',v.L,v.W)+carMv('car-d',v.L,v.W)+carMv('car-b',v.L,v.W);
   g+=`<text id="lab-a" class="lab">A</text><text id="lab-d" class="lab">D</text><text id="lab-b" class="lab">B</text>`;
 
-  const svg=$('plan');FULL=[-8,-8,W+14,sb+16];
+  const svg=$('plan');FULL=[-8,-8,W+14,sb+18];
   svg.setAttribute('viewBox',FULL.join(' '));
   svg.innerHTML=g;
   resetScene();applyAnim();CUR=G;
@@ -689,7 +691,15 @@ function build3D(G){
   box(S3,cRoad,-12,sy,W+24,ST,.03,0,false);
   for(let x=-10;x<W+10;x+=3.5)box(S3,cPed,x,sy+ST/2-.08,2,.16,.01,.03,false);
   for(let z=sy+.5;z<sb-.3;z+=.9)box(S3,cPed,gx-2,z,4,.45,.01,.03,false);
-  box(S3,cPed,-12,PB,W+24,WALK,.15);
+  box(S3,cPed,-12,PB,12+B,WALK,.15);box(S3,cPed,B+R,PB,W-2*B-2*R,WALK,.15);box(S3,cPed,W-B,PB,12+B,WALK,.15); // 진입로·출구 자리는 인도를 끊음
+  box(S3,cPed,-12,sb,W+24,3,.15); // 건너편 인도
+  box(S3,cPed,gx+3.3,sy+.2,.4,ST/2-.35,.01,.03,false);box(S3,cPed,gx-3.7,sy+ST/2+.15,.4,ST/2-.35,.01,.03,false); // 정지선
+  const lamp=(c,on)=>mat(c,on?{emissive:c,emissiveIntensity:1.3,roughness:.3}:{roughness:.3});
+  const signal=(x,z,laneZ,dirX,faceZ)=>{ // 차량 3구 신호(초록) + 보행 신호(빨강), 차가 계속 달리므로 차량 신호가 초록
+    cyl(S3,.07,.09,3.6,cDark,x,1.95,z,10);const L=laneZ-z,arm=cyl(S3,.045,.045,Math.abs(L),cDark,x,3.55,z+L/2,8);arm.rotation.x=Math.PI/2;
+    box(S3,cDark,x-.18,laneZ-.18,.36,.36,1.05,3);[['#FF2D3D',0,3.85],['#FFB800',0,3.53],['#00B84A',1,3.21]].forEach(([c,on,y])=>mesh(S3,new T3.SphereGeometry(.11,12,8),lamp(c,on),x+dirX*.19,y,laneZ,false));
+    box(S3,cDark,x-.17,z-.12,.34,.24,.55,2.1);box(S3,lamp('#FF2D3D',1),x-.12,z+(faceZ>0?.12:-.14),.24,.02,.2,2.4,false)};
+  signal(gx+2.8,PB+1.2,sy+ST*.25,1,1);signal(gx-2.8,sb+1.2,sy+ST*.75,-1,-1);
   // 도로 (ㄷ자 + U턴) · 진행 방향 화살표
   box(S3,cRoad,B,B,R,sy-B,.03,0,false);box(S3,cRoad,B,B,W-2*B,R,.03,0,false);box(S3,cRoad,W-B-R,B,R,sy-B,.03,0,false);
   const chev=new T3.Shape();chev.moveTo(-.9,-.9);chev.lineTo(.6,0);chev.lineTo(-.9,.9);chev.lineTo(-.45,0);chev.closePath();
