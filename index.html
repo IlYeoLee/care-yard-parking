@@ -257,6 +257,7 @@ td.n,th.n{text-align:right}
           <span class="sw" style="background:#C7CED9"></span><span>도크 칸</span>
           <span class="sw" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px #D9DCE2"></span><span>보행 바닥 (부두, 에이프런, 광장, 인도)</span>
           <span class="sw" style="background:#DCEBDC"></span><span>마당</span>
+          <span class="sw" style="background:linear-gradient(90deg,#FFC800 0 40%,#C7CED9 40% 60%,#FFC800 60%)"></span><span>바퀴 멈춤턱, 흰 정렬선 (도크 칸 안)</span>
           <span class="sw" style="background:linear-gradient(#8A1FFF 0 60%,#22222A 60%);width:10px;margin-left:6px"></span><span>XL 사이니지 (높이 2.0 m), 차 앞에서 마당을 향함</span>
           <span class="sw" style="background:#FF1F78;height:3px"></span><span>물리적 가림판, 차가 움직이는 동안 닫힘</span>
           <span class="sw" style="background:#1B2A5E;height:2px;opacity:.55"></span><span>펜스, 보행자의 차도 진입 차단</span>
@@ -358,7 +359,7 @@ function row(o,G,col,id){
   slots(o.c,bw,share).forEach((q,i)=>{
     const cx=q.bay+bw/2,sc=id&&id.i==i,no=o.no0+i+1;
     if(q.dp)h+=`<rect class="ped" x="${q.pier}" y="0" width="${P}" height="${bd}"/><line class="fence" x1="${q.pier}" y1=".12" x2="${q.pier+P}" y2=".12"/>`;
-    h+=`<rect class="bay" x="${q.bay+.06}" y="0" width="${bw-.12}" height="${bd}"/>`;
+    h+=`<rect class="bay" x="${q.bay+.06}" y="0" width="${bw-.12}" height="${bd}"/><path class="guide" d="M${cx-v.W/2-.16} .35 V${bd-.45} M${cx+v.W/2+.16} .35 V${bd-.45}"/>`+[-1,1].map(sx=>`<rect x="${cx+sx*(v.W/2-.12)-.3}" y="${.5+v.L-.45}" width=".6" height=".16" fill="#FFC800"/>`).join('');
     {const D0=.5+v.L*.45-.8,D1=D0+1.6,ex=q.pier<q.bay?q.pier+P:q.pier;h+=`<path class="fence" d="M${ex} .1 V${D0} M${ex} ${D1} V${bd}${q.dp&&q.pier<q.bay?` M${q.pier} .1 V${bd}`:''}"/><line class="psd" x1="${ex}" y1="${D0}" x2="${ex}" y2="${D1}"/>`}
     h+=`<rect class="totem-base" x="${cx-.35}" y="${d-.55}" width=".7" height=".3"/><rect x="${cx-.3}" y="${d-.52}" width=".6" height=".18" fill="${col}"/><rect class="chg" x="${q.pier>q.bay?q.bay+.12:q.bay+bw-.57}" y="${bd+.3}" width=".45" height=".45"/><text class="no" x="${cx}" y="${bd+.95}">${no}</text>`;
     if(sc){h+=`<rect id="kid-${id.k}" class="kid" x="${q.pier+P/2-.35}" y="${bd*.55-.35}" width=".7" height=".7"/><line id="gate-${id.k}" class="gate" x1="${q.pier}" y1="${bd}" x2="${q.pier+P}" y2="${bd}"/>`;
@@ -844,6 +845,8 @@ function build3D(G){
     slots(o.c,bw,G.share).forEach((q,i)=>{const no=o.no0+i+1,cx=q.bay+bw/2,px=q.pier+P/2;
       if(q.dp){box(grp,cPed,q.pier,0,P,bd,.15);for(const p of [q.pier,q.pier+P-.06])box(grp,cNavy,p,.05,.06,.06,1,.15);box(grp,cNavy,q.pier,.05,P,.05,.05,1.1);box(grp,cNavy,q.pier,.05,P,.05,.04,.65)}
       box(grp,cBay,q.bay+.06,0,bw-.12,bd,.04,0,false);
+      box(grp,cPed,cx-v.W/2-.2,.35,.08,bd-.8,.012,.04,false);box(grp,cPed,cx+v.W/2+.12,.35,.08,bd-.8,.012,.04,false); // 정렬선
+      for(const sx of [-1,1])box(grp,mat('#FFC800',{roughness:.6}),cx+sx*(v.W/2-.12)-.3,.5+v.L-.45,.6,.16,.12,.04); // 바퀴 멈춤턱 (앞바퀴 바로 앞)
       {const ag=new T3.Group();ag.position.set(q.bay+bw/2,.05,bd*.5);ag.rotation.y=-Math.PI/2;grp.add(ag);const ar=new T3.Mesh(new T3.ShapeGeometry(chev),cPed);ar.rotation.x=-Math.PI/2;ar.scale.setScalar(.9);ag.add(ar)} // 코 방향(마당 쪽) 화살표
       const ci=Math.floor(((no*2654435761)%4294967296)/4294967296*12); // 사이니지와 앞 스크린이 같은 카테고리
       if(occ.has(no))car(grp,cx,.5+v.L/2,ci);
@@ -1014,6 +1017,7 @@ render();
 #plan .totem-base{fill:#22222A}
 #plan .chg{fill:#00B84A}
 #plan .fence{fill:none;stroke:#1B2A5E;stroke-width:.18;opacity:.55}
+#plan .guide{fill:none;stroke:#FFFFFF;stroke-width:.08}
 #plan .psd{stroke:#1B2A5E;stroke-width:.3;opacity:.45}
 #plan .barrier{stroke:#FF1F78;stroke-width:.26;opacity:.7}
 #plan .barrier.on{stroke-width:.45;opacity:1}
