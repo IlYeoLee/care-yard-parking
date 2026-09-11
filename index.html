@@ -228,11 +228,6 @@ td.n,th.n{text-align:right}
           <input id="yr" type="range" min="0.05" max="0.45" step="0.05" value="0.3">
           <small>가운데 쯤이 마당이 가장 넓음. 왼쪽은 얕고 넓게, 오른쪽은 좁고 깊게 줄어듦</small>
         </div>
-        <div class="ctl">
-          <label for="occ">3D에 보이는 도킹 차량 <output id="occO"></output></label>
-          <input id="occ" type="range" min="0" max="30" step="1" value="18">
-          <small>나머지 도크는 픽업이나 EXPLORE로 나가 있어 빈 칸으로 보임</small>
-        </div>
         <label class="toggle"><input id="anim" type="checkbox" checked> 차량 흐름 재생</label>
       </div>
 
@@ -279,7 +274,7 @@ const VEH={
   pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:2.8,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
 };
 const ZC={MAKE:'#FF2D3D',QUIET:'#8A1FFF',EXPLORE:'#00B84A'}; // AFTERSPACE/art · story · nature
-const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1,yr:.3,ex:0,occ:null}; // occ null = 도크의 60%
+const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1,yr:.3,ex:0};
 let P=1.4; // 부두 폭, geo()가 옆 차 간격에서 계산
 let SCN={},raf=0,FULL=null,CUR=null,WK={a:4,b:null},wraf=0;
 const STEP=.55,CAD=2; // ponytail: 초등 4학년(10세) 보폭 0.55 m · 초당 2걸음 추정치, 실측값 생기면 교체
@@ -456,7 +451,6 @@ function render(){
   // 숫자 · 점검 · 비교표
   const cd=coreDist(G),ld=coreDist(G,'lounge');
   $('kpis').innerHTML=[[S.n,'대','Docks'],[fmt(G.yard/m),'㎡',m>1?`Yard × ${m}`:'Yard'],[fmt(cd.max),'m','Max to core'],[fmt(G.area),'㎡','Site']].map(([n,u,l])=>`<div class="kpi"><b>${n}<small>${u}</small></b><span class="lbl">${l}</span></div>`).join('');
-  const oc=S.occ==null?Math.round(S.n*.6):Math.min(S.occ,S.n);$('occ').max=S.n;$('occ').value=oc;$('occO').textContent=`${oc} / ${S.n}대`;
   $('nO').textContent=`${S.n}대`;$('gpO').textContent=`${S.gap.toFixed(1)} m`;$('exO').textContent=`+${S.ex} m`;$('yrO').textContent=`${fmt(G.yard/m)} ㎡${m>1?' × '+m:''}`;$('rO').textContent=`${R.toFixed(1)} m`;
   $('stats').innerHTML=[
     ['부지 (가로 × 세로)',`${W.toFixed(1)} × ${PB.toFixed(1)} m`],
@@ -801,7 +795,7 @@ function build3D(G){
     for(const sx of [-1,1])for(const sz of [-1,1]){const w=new T3.Mesh(new T3.CylinderGeometry(.34,.34,.24,18),cTire);w.rotation.z=Math.PI/2;w.position.set(sx*(Wd/2-.08),.34,sz*(L/2-.85));w.castShadow=true;g.add(w)}return g};
   // ── 도크 줄: 부두 · 칸 · 차 · 가림판 · 충전기 · XL 사이니지(피그마 카드 무작위) · 승하차 장면 ──
   const cardAspect=200/761,sgH=2,sgW=sgH*cardAspect;
-  const occN=S.occ==null?Math.round(G.n*.6):Math.min(S.occ,G.n),hs=n=>(n*2654435761)%4294967296,occ=new Set([...Array(G.n)].map((_,i)=>i+1).sort((a,b)=>hs(a)-hs(b)).slice(0,occN)); // 도킹된 도크 (고정 무작위)
+  const occN=Math.round(G.n*.75),hs=n=>(n*2654435761)%4294967296,occ=new Set([...Array(G.n)].map((_,i)=>i+1).sort((a,b)=>hs(a)-hs(b)).slice(0,occN)); // 3D에선 도크의 75%만 도킹 (나머지는 픽업·EXPLORE 중), 고정 무작위
   G.rows.forEach(o=>{
     const grp=new T3.Group();grp.position.set(o.x,0,o.y);grp.rotation.y=-o.a*Math.PI/180;S3.add(grp);
     const bd=v.bd,bw=G.bw;
@@ -882,7 +876,6 @@ document.querySelectorAll('input[name=sh]').forEach(el=>el.onchange=()=>{S.share
 $('n').oninput=e=>{S.n=+e.target.value;render()};
 $('r').oninput=e=>{S.R=+e.target.value;render()};
 $('gp').oninput=e=>{S.gap=+e.target.value;render()};
-$('occ').oninput=e=>{S.occ=+e.target.value;$('occO').textContent=`${S.occ} / ${S.n}대`;if(window.THREE&&R3&&!$('s3').hidden)build3D(CUR)};
 $('yr').oninput=e=>{S.yr=+e.target.value;render()};
 $('ex').oninput=e=>{S.ex=+e.target.value;render()};
 $('anim').onchange=()=>{if(!raf)applyAnim()};
