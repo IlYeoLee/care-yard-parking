@@ -40,7 +40,10 @@ h1 em{font-style:normal;font-weight:800;color:var(--navy)}
 #c3 canvas{display:block}
 .v3bar{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;z-index:1}
 .v3bar button{min-height:40px;background:var(--surface);color:var(--navy);box-shadow:var(--e1)}
-.v3bar #cap3{background:var(--navy);color:#fff;margin-left:auto}
+.v3bar #fs3{margin-left:auto}
+.v3bar #cap3{background:var(--navy);color:#fff}
+.sheet3:fullscreen{background:#E9EDF2}
+.sheet3:fullscreen #c3{height:100vh}
 .v3note{position:absolute;bottom:10px;left:12px;margin:0;font-size:12px;color:var(--faint)}
 .scenebar{display:flex;gap:16px;align-items:center;background:var(--surface);box-shadow:var(--e1);padding:12px 16px}
 .scenebar p{margin:0;font-size:14px;line-height:1.5;min-height:3em;display:flex;align-items:center}
@@ -120,7 +123,7 @@ td.n,th.n{text-align:right}
         <p id="cap" aria-live="polite">A와 D가 동시에 빠지고, 뒤따라온 B가 빈 도크에 들어가는 과정</p>
       </div>
       <div class="sheet"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Care Yard 평면 배치도"></svg></div>
-      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
+      <div class="sheet3" id="s3" hidden><div class="v3bar"><button type="button" data-cam="iso">사선</button><button type="button" data-cam="top">조감</button><button type="button" data-cam="kid">아이 눈높이</button><button type="button" id="fs3">전체화면</button><button type="button" id="cap3">고해상도 PNG 저장</button></div><div id="c3"></div><p class="v3note">드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동</p></div>
       <div class="tbl">
         <table id="cmp"></table>
         <p class="cap">차종, 도크 수, 도로 폭은 오른쪽 설정을 따름. 행을 누르면 도면이 바뀜.<br>크기 비교 기준: 초등학교 운동장 3,000㎡ (학생 600명 이하 법정 최소), 농구코트 420㎡ (28 × 15 m)</p>
@@ -689,7 +692,7 @@ function build3D(G){
     const f=new T3.Mesh(new T3.PlaneGeometry(w,h),m);f.position.z=.01;g.add(f);if(back){const b=f.clone();b.rotation.y=Math.PI;b.position.z=-.01;g.add(b)}return g};
   const {v,R,m,d,Gw,teeth,Hs,yi0,yb,PB,sy,sb,core,W}=G,Tn=v.turn,cl=B+R/2,cr=W-B-R/2,gx=core.gx;
   const cLot=mat('#DDE3EA'),cRoad=mat('#A9B2C0'),cBay=mat('#BCC4D0'),cPed=mat('#FFFFFF'),cYard=mat('#DCEBDC'),cPlant=mat('#CFE3CF'),cNavy=mat('#1B2A5E'),
-    cWhite=mat('#FFFFFF',{roughness:.35}),cGlass=mat('#22283A',{roughness:.15,metalness:.2}),cTire=mat('#22222A'),cPink=mat('#FF1F78',{transparent:true,opacity:.5,roughness:.3}),
+    cWhite=mat('#FFFFFF',{roughness:.35}),cGlass=mat('#22283A',{roughness:.15,metalness:.2}),cTire=mat('#22222A'),cPink=mat('#1B2A5E',{transparent:true,opacity:.6,roughness:.3}),
     cTree=mat('#B7D3B9',{flatShading:true}),cTree2=mat('#A7C9AA',{flatShading:true}),cTrunk=mat('#9C8B7A'),cDark=mat('#22222A'),cPath=mat('#F1ECE3'),cSand=mat('#EAD9B5'),cYellow=mat('#FFB800',{roughness:.4});
   // 바닥 · 거리 · 인도 · 횡단보도
   flat(S3,new T3.PlaneGeometry(W*6,W*6),mat('#E4E9EF'),W/2,-.02,PB/2);
@@ -868,6 +871,8 @@ function capture3(){
 $('v3').onclick=()=>show3D($('s3').hidden);
 document.querySelectorAll('[data-cam]').forEach(b=>b.onclick=()=>cam3(b.dataset.cam));
 $('cap3').onclick=capture3;
+$('fs3').onclick=()=>document.fullscreenElement?document.exitFullscreen():$('s3').requestFullscreen();
+document.addEventListener('fullscreenchange',()=>$('fs3').textContent=document.fullscreenElement?'전체화면 닫기':'전체화면');
 
 function applyAnim(){const on=$('anim').checked,svg=$('plan');svg.classList.toggle('still',!on);on?svg.unpauseAnimations():svg.pauseAnimations()}
 if(matchMedia('(prefers-reduced-motion: reduce)').matches)$('anim').checked=false;
