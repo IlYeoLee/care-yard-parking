@@ -212,8 +212,8 @@ td.n,th.n{text-align:right}
         </div>
         <div class="ctl">
           <label for="gp">옆 차 간격 (부두 쪽) <output id="gpO"></output></label>
-          <input id="gp" type="range" min="1.6" max="6" step="0.1" value="2.1">
-          <small>차 옆면 사이 거리. 부두 폭은 이 값에서 약 0.7 m를 뺀 만큼</small>
+          <input id="gp" type="range" min="2.3" max="7" step="0.1" value="3.5">
+          <small>차 옆면 사이 거리. 부두(걷는 폭)는 이 값에서 약 1.1 m를 뺀 만큼</small>
         </div>
         <div class="ctl">
           <label for="n">도크(차량) 수 <output id="nO"></output></label>
@@ -277,11 +277,11 @@ const SCREENS=["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEgAAADYCAYAAAD4Ut
 const $=id=>document.getElementById(id);
 const B=3,APR=2,WALK=3,ST=8,RC=3,V=12;
 const VEH={
-  pv5:{name:'PV5 패신저',L:4.695,W:1.895,turn:5.5,bw:2.6,bd:5.5,both:true},
-  pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:2.8,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
+  pv5:{name:'PV5 패신저',L:4.695,W:1.895,turn:5.5,bw:3,bd:5.5,both:true}, // 도크 칸 = 차 폭 + 양옆 0.55 m (정차 오차·미러·슬라이딩 도어)
+  pv7:{name:'PV7 콘셉트',L:5.27,W:2.065,turn:6,bw:3.2,bd:6.1,both:null}, // ponytail: 회전반경·도어는 콘셉트 추정, 양산 제원 공개되면 교체
 };
 const ZC={MAKE:'#FF2D3D',QUIET:'#8A1FFF',EXPLORE:'#00B84A'}; // AFTERSPACE/art · story · nature
-const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:2.1,yr:.3,ex:0};
+const S={veh:'pv5',m:1,share:false,n:30,R:6.5,gap:3.5,yr:.3,ex:0};
 let P=1.4; // 부두 폭, geo()가 옆 차 간격에서 계산
 let SCN={},raf=0,FULL=null,CUR=null,WK={a:4,b:null},wraf=0;
 const STEP=.55,CAD=2; // ponytail: 초등 4학년(10세) 보폭 0.55 m · 초당 2걸음 추정치, 실측값 생기면 교체
@@ -617,7 +617,7 @@ $('plan').addEventListener('click',e=>{
 function best(){
   const n=S.n,kids=n*5,need=Math.max(3000,kids*5);let b=null; // 최소 초등학교 운동장 1개
   for(const m of [1,2,3])for(let k=1;k<=9;k++)for(let ex=0;ex<=40;ex+=2){
-    const T={veh:'pv5',m,share:false,n,R:6.5,gap:4,yr:+(k*.05).toFixed(2),ex},G=geo(T);
+    const T={veh:'pv5',m,share:false,n,R:6.5,gap:+(4+VEH.pv5.bw-VEH.pv5.W).toFixed(2),yr:+(k*.05).toFixed(2),ex},G=geo(T); // 부두 4.0 m
     if(G.yard>=need&&(!b||G.area<b.G.area))b={T,G};
   }
   Object.assign(S,b.T);
@@ -631,7 +631,7 @@ function best(){
   <ul>
     <li>목표: 아래 조건을 모두 지키면서 부지를 가장 작게. 기획안의 "Care Yard는 차량이 방이 되게 하는 최소한의 고정 인프라"를 그대로 수치로 옮김</li>
     <li>차량 PV5 패신저 ${n}대 (4,695 × 1,895 mm, 회전반경 5.5 m, 양쪽 슬라이딩 도어)</li>
-    <li>옆 차 간격 4.0 m. 보도 유효폭 최소 2.0 m(도로의 구조·시설 기준에 관한 규칙 제16조)의 2배라 다른 차 아이와 섞이지 않음. 2대 1부두는 반대쪽 간격이 0.7 m라 제외</li>
+    <li>부두(아이가 걷는 폭) 4.0 m. 보도 유효폭 최소 2.0 m(도로의 구조·시설 기준에 관한 규칙 제16조)의 2배라 다른 차 아이와 섞이지 않음. 도크 칸은 차 폭 1.9 m에 양옆 0.55 m씩 더한 3.0 m(정차 오차·사이드미러·슬라이딩 도어 여유, 설계 가정). 그래서 옆 차 간격은 ${G.gap[0].toFixed(1)} m. 2대 1부두는 반대쪽 간격이 1.1 m뿐이라 제외</li>
     <li>순환도로 6.5 m. 직각주차 차로 6.0 m(주차장법 시행규칙)에 0.5 m 여유</li>
     <li>보행 마당 ${fmt(need)}㎡ 이상. 아이들이 초등학교 운동장 하나(체육장 법정 최소 3,000㎡, 학생 600명 이하)만큼은 뛰어놀 수 있게. Room당 아이 5명(기획안 예시) × ${n}대 = ${kids}명이면 1인 ${(G.yard/kids).toFixed(0)}㎡</li>
     <li>한 마당. Room Relay는 한 Care Deck 안에서 가까운 도크로 옮겨 타는 구조라, 포켓으로 나누면 우회 거리만 늘어남</li>
