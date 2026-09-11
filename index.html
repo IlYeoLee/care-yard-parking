@@ -27,6 +27,13 @@ h1 em{font-style:normal;font-weight:800;color:var(--navy)}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
 @media (max-width:1020px){.grid{grid-template-columns:1fr}}
 .main{display:grid;gap:16px;min-width:0}
+.best{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.best p{margin:0;color:var(--soft);font-size:14px}
+#bestBtn{min-height:52px;font-size:16px;padding:0 24px}
+#bestBox ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px}
+#bestBox li{display:grid;grid-template-columns:16px 1fr}
+#bestBox li::before{content:"";width:6px;height:6px;background:var(--navy);margin-top:8px}
+#bestBox .res{display:flex;flex-wrap:wrap;gap:12px 36px}
 .scenebar{display:flex;gap:16px;align-items:center;background:var(--surface);box-shadow:var(--e1);padding:12px 16px}
 .scenebar p{margin:0;font-size:14px;line-height:1.5;min-height:3em;display:flex;align-items:center}
 button{font:800 14px "42dot Sans",sans-serif;letter-spacing:-.02em;background:var(--navy);color:#fff;border:0;border-radius:999px;min-height:44px;padding:0 20px;cursor:pointer;white-space:nowrap;box-shadow:var(--cta)}
@@ -94,6 +101,11 @@ td.n,th.n{text-align:right}
 
   <div class="grid">
     <div class="main">
+      <div class="best">
+        <button id="bestBtn" type="button">기획안 최적버전 보기</button>
+        <p>기획안 조건과 법정 기준을 모두 지키면서 부지가 가장 작은 배치를 계산해 적용</p>
+      </div>
+      <div class="box" id="bestBox" hidden></div>
       <div class="scenebar">
         <button id="play" type="button">출차 장면 재생</button>
         <p id="cap" aria-live="polite">A와 D가 동시에 빠지고, 뒤따라온 B가 빈 도크에 들어가는 과정</p>
@@ -180,7 +192,7 @@ td.n,th.n{text-align:right}
         </div>
         <div class="ctl">
           <label for="gp">옆 차 간격 (부두 쪽) <output id="gpO"></output></label>
-          <input id="gp" type="range" min="1.6" max="3" step="0.1" value="2.1">
+          <input id="gp" type="range" min="1.6" max="6" step="0.1" value="2.1">
           <small>차 옆면 사이 거리. 부두 폭은 이 값에서 약 0.7 m를 뺀 만큼</small>
         </div>
         <div class="ctl">
@@ -568,6 +580,35 @@ $('plan').addEventListener('click',e=>{
   if(WK.b!=null)WK={a:v,b:null};else if(v!==WK.a)WK.b=v;
   walk();
 });
+
+// ── 기획안 최적버전: 조건을 모두 지키는 안 중 부지 최소 ──
+function best(){
+  const n=S.n,kids=n*5,need=kids*5;let b=null;
+  for(const m of [1,2,3])for(let k=1;k<=9;k++)for(let ex=0;ex<=20;ex+=2){
+    const T={veh:'pv5',m,share:false,n,R:6.5,gap:4,yr:+(k*.05).toFixed(2),ex},G=geo(T);
+    if(G.yard>=need&&(!b||G.area<b.G.area))b={T,G};
+  }
+  Object.assign(S,b.T);
+  $('veh').value=S.veh;$('m'+S.m).checked=true;$('sh0').checked=true;
+  [['n','n'],['r','R'],['gp','gap'],['yr','yr'],['ex','ex']].forEach(([id,k])=>$(id).value=S[k]);
+  render();
+  const G=CUR,cd=coreDist(G),relay=G.teeth[0].Wy+1.2;
+  $('bestBox').hidden=false;
+  $('bestBox').innerHTML=`<h2>기획안 최적버전</h2>
+  <div class="res kpis">${[[fmt(G.area),'㎡','Site'],[fmt(G.yard),'㎡','Care deck'],[relay.toFixed(0),'m','Facing dock'],[fmt(cd.max),'m','Max to core']].map(([v,u,l])=>`<div class="kpi"><b>${v}<small>${u}</small></b><span class="lbl">${l}</span></div>`).join('')}</div>
+  <ul>
+    <li>목표: 아래 조건을 모두 지키면서 부지를 가장 작게. 기획안의 "Care Yard는 차량이 방이 되게 하는 최소한의 고정 인프라"를 그대로 수치로 옮김</li>
+    <li>차량 PV5 패신저 ${n}대 (4,695 × 1,895 mm, 회전반경 5.5 m, 양쪽 슬라이딩 도어)</li>
+    <li>옆 차 간격 4.0 m. 보도 유효폭 최소 2.0 m(도로의 구조·시설 기준에 관한 규칙 제16조)의 2배라 다른 차 아이와 섞이지 않음. 2대 1부두는 반대쪽 간격이 0.7 m라 제외</li>
+    <li>순환도로 6.5 m. 직각주차 차로 6.0 m(주차장법 시행규칙)에 0.5 m 여유</li>
+    <li>보행 마당 ${fmt(need)}㎡ 이상. Room당 아이 5명(기획안 예시) × ${n}대 = ${kids}명, 1인 5㎡(초등학교 체육장 법정 최소 3,000㎡ ÷ 600명)</li>
+    <li>한 마당. Room Relay는 한 Care Deck 안에서 가까운 도크로 옮겨 타는 구조라, 포켓으로 나누면 우회 거리만 늘어남</li>
+    <li>결과: ${G.W.toFixed(0)} × ${G.PB.toFixed(0)} m, 좁고 깊은 Care Deck. 마주 보는 도크까지 약 ${relay.toFixed(0)} m, 아이 걸음 ${walkTime(relay)}</li>
+    <li>대가: 가장 먼 차에서 서비스 코어까지 ${fmt(cd.max)} m, ${walkTime(cd.max)}. 줄이려면 마당 비율을 가운데로 옮기면 되지만 부지가 커짐</li>
+  </ul>`;
+  $('bestBox').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('bestBtn').onclick=best;
 
 function applyAnim(){const on=$('anim').checked,svg=$('plan');svg.classList.toggle('still',!on);on?svg.unpauseAnimations():svg.pauseAnimations()}
 if(matchMedia('(prefers-reduced-motion: reduce)').matches)$('anim').checked=false;
