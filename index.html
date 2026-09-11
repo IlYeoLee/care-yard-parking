@@ -846,14 +846,13 @@ function build3D(G){
   board(S3,signTex(T3,['PARENT LOUNGE','WAIT HERE UNTIL PICK-UP'],'#FFFFFF','#1B2A5E'),Math.min(core.w*.7,5.6),1.4,lx0+core.w/2,2.3,core.y+core.h-.4);
   for(let i=0;i<3;i++){box(S3,cNavy,lx0+1.2+i*2.2,core.y+core.h-2.2,1.4,.45,.45,.15);adultAt(S3,lx0+1.9+i*2.2,core.y+core.h-1.5,Math.PI,.15)}
   // 인계 게이트: 남색 문설주·보 + 픽셀 아트 간판 (사이니지 스타일)
-  const PX=['#FF2D3D','#8A1FFF','#00B84A','#FFB800','#2D6BFF','#FF1F78','#FFFFFF'];
+  const PX=['#FFFFFF']; // 남색 단색: 픽셀은 흰색 농도만
   box(S3,cNavy,gx-2.6,PB-.25,.32,.32,3.2,.15);box(S3,cNavy,gx+2.28,PB-.25,.32,.32,3.2,.15);box(S3,cNavy,gx-2.7,PB-.28,5.4,.38,.95,2.6);
   const gTex=new T3.CanvasTexture(cv(1024,180,(x,w,h)=>{x.fillStyle='#1B2A5E';x.fillRect(0,0,w,h);x.fillStyle='#FFFFFF';x.textBaseline='middle';x.font='800 64px "42dot Sans",sans-serif';x.fillText('HANDOFF GATE',44,h*.42);
     x.globalAlpha=.75;x.font='600 26px "42dot Sans",sans-serif';x.fillText('ARRIVED → VERIFIED → HANDOFF',46,h*.78);x.globalAlpha=1;
-    let r=11;const rn=()=>(r=(r*9301+49297)%233280)/233280;for(let i=0;i<9;i++)for(let j=0;j<5;j++)if(rn()<.2+i*.07){x.fillStyle=PX[Math.floor(rn()*PX.length)];x.globalAlpha=.5+rn()*.5;x.fillRect(w-300+i*30,22+j*28,26,24)}x.globalAlpha=1}));
+    let r=11;const rn=()=>(r=(r*9301+49297)%233280)/233280;for(let i=0;i<9;i++)for(let j=0;j<5;j++)if(rn()<.2+i*.07){x.fillStyle=PX[Math.floor(rn()*PX.length)];x.globalAlpha=.12+rn()*.45;x.fillRect(w-300+i*30,22+j*28,26,24)}x.globalAlpha=1}));
   gTex.encoding=T3.sRGBEncoding;gTex.anisotropy=8;
   board(S3,gTex,5.2,.91,gx,3.075,PB+.115,0,false);board(S3,gTex,5.2,.91,gx,3.075,PB-.295,Math.PI,false);
-  for(const px of [gx-2.6,gx+2.28])for(let k=0;k<7;k++)box(S3,mat(PX[(k*3+(px>gx?2:0))%PX.length],{roughness:.4}),px+(k%2?.2:-.02),PB+.07,.14,.14,.14,.5+k*.3,false);
   const inout=(x,t)=>{cyl(S3,.05,.05,2.6,cNavy,x,1.3,PB+1.2,8);board(S3,signTex(T3,[t,'ONE WAY'],'#1B2A5E','#FFFFFF',512,256),1.4,.7,x,2.45,PB+1.2)};
   inout(B-1.1,'IN');inout(W-B+1.1,'OUT');
   adultAt(S3,gx-1,PB+1.5,Math.PI,.15);kidAt(S3,gx-.3,PB+1.5,Math.PI,.15);
